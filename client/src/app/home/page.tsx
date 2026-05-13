@@ -1,8 +1,13 @@
-export default function HomePage() {
+import Header from "@/components/Header";
+
+export default function TestPage() {
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-      <p className="text-gray-500">Visão geral da biblioteca</p>
-    </main>
+    <div>
+      <Header />
+      <main style={{ padding: "2rem" }}>
+        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <p className="text-gray-500">Bem-vindo ao dashboard!</p>
+      </main>
+    </div>
   );
 }
