@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Categoria {
+enum Category {
   ROMANCE
   INFANTIL
   TECNOLOGIA
@@ -18,34 +18,34 @@ enum Categoria {
   CIENCIAS
 }
 
-enum StatusEmprestimo {
+enum LoanStatus {
   EM_ANDAMENTO
   DEVOLVIDO
   ATRASADO
 }
 
-model Livro {
+model Book {
   id                   String       @id @default(uuid())
-  titulo               String
+  title                String
   autor                String
   isbn                 String
-  editora              String
-  ano                  Int
-  quantidadeTotal      Int
-  quantidadeDisponivel Int
-  categoria            Categoria
+  publisher            String
+  year                 Int
+  totalQuantity        Int
+  avaliableQuantity    Int
+  category             Category
   // Relacionamento
-  emprestimos          Emprestimo[]
+  loans                Loan[]
 }
 
-model Emprestimo {
+model Loan {
   id                    String           @id @default(uuid())
   
-  livroId               String
-  livro                 Livro            @relation(fields: [livroId], references: [id])
-  nomeCliente           String
-  emailCliente          String
-  dataLocacao           DateTime
-  dataPrevistaDevolucao DateTime
-  status                StatusEmprestimo
+  bookId               String
+  book                 Book            @relation(fields: [bookId], references: [id])
+  customerName         String
+  customerEmail        String
+  loanDate             DateTime @default(now())
+  dueDate              DateTime
+  status               LoanStatus @default(EM_ANDAMENTO)
 }
