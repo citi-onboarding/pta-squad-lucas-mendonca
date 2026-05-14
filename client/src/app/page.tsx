@@ -1,6 +1,7 @@
 import Image from "next/image";
-
 import { LogoCITi } from "../assets";
+import { LoanStatusCard } from "../components/LoanStatusCard";
+import { testLoans } from "../testeStatus";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
           <strong>&hearts;</strong> by CITi
         </p>
       </div>
+      <LoanStatusCard loans={testLoans} />
     </div>
   );
 }
