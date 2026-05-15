@@ -25,27 +25,27 @@ enum LoanStatus {
 }
 
 model Book {
-  id                   String       @id @default(uuid())
-  title                String
-  autor                String
-  isbn                 String
-  publisher            String
-  year                 Int
-  totalQuantity        Int
-  avaliableQuantity    Int
-  category             Category
+  id                String   @id @default(uuid())
+  title             String
+  autor             String
+  isbn              String   @unique
+  publisher         String
+  year              Int
+  totalQuantity     Int
+  availableQuantity Int
+  category          Category
   // Relacionamento
-  loans                Loan[]
+  loans             Loan[]
 }
 
 model Loan {
-  id                    String           @id @default(uuid())
-  
-  bookId               String
-  book                 Book            @relation(fields: [bookId], references: [id])
-  customerName         String
-  customerEmail        String
-  loanDate             DateTime @default(now())
-  dueDate              DateTime
-  status               LoanStatus @default(EM_ANDAMENTO)
+  id String @id @default(uuid())
+
+  bookId        String
+  book          Book       @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  customerName  String
+  customerEmail String
+  loanDate      DateTime   @default(now())
+  dueDate       DateTime
+  status        LoanStatus @default(EM_ANDAMENTO)
 }
