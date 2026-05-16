@@ -32,9 +32,8 @@ export default function Header() {
 return (
     <header className="w-full border-b border-gray-200 bg-white py-3">
 
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6">
+        <div className="flex w-full items-center justify-between px-8">
 
-            {/* Logo + Nome */}
             <div className="flex items-center gap-3">
                 <Image
                   src="/img/logoCiti_semfundo.svg"
@@ -47,8 +46,7 @@ return (
                 </span>
             </div>
 
-                                      
-            {/* Navegação */}
+                                  
             <nav className="flex items-center gap-2">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;

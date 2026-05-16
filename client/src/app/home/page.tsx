@@ -19,14 +19,14 @@ export default function TestPage() {
         <div className="mt-6 grid w-full grid-cols-3 gap-4">
           
           <LibraryDataCard
-            title="Total livros"
+            title="Total de Livros"
             data="1,245"
             icon={<BookOpen size={22}/>}
             variant="default"
           />
 
           <LibraryDataCard
-            title="Empreśtimos Ativos"
+            title="Empréstimos Ativos"
             data="87"
             icon={<Clock size={22}/>}
             variant="default"
