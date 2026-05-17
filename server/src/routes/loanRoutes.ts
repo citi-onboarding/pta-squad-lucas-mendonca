@@ -1,16 +1,11 @@
 import { Router } from "express";
 import { LoanController } from "src/controllers/loanController";
 
-export class LoanRoutes {
-  public router: Router;
-  private loanController: LoanController;
+const routes = Router()
+const loanController = new LoanController()
 
-  constructor() {
-    this.router = Router();
-    this.loanController = new LoanController();
+routes.post("/", loanController.create);
+routes.get("/", loanController.read);
+routes.patch("/:id", loanController.patch);
 
-    this.router.post("/loan/", (req, res) => this.loanController.create(req, res));
-    this.router.get("/loan/all", (req, res) => this.loanController.read(req, res));
-    this.router.patch("/loan/return", (req, res) => this.loanController.patch(req, res));
-  }
-}
+export default routes;

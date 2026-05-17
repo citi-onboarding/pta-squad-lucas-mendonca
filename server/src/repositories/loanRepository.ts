@@ -2,59 +2,70 @@ import { LoanStatus, PrismaClient } from "@prisma/client";
 import { CreateLoanDTO, FinishLoanDTO } from "src/DTOs/loanDTO";
 
 export class LoanRepository {
-    
-    private prisma = new PrismaClient();
-    
-    async findBookById(bookId: string) {
+  private prisma = new PrismaClient();
+
+  async findBookById(bookId: string) {
     return await this.prisma.book.findUnique({
-        where: {
+      where: {
         id: bookId,
-        },
+      },
     });
-    }
+  }
 
-    async findAllLoans(){
-        return await this.prisma.loan.findMany({
-            include: {book: true},
-            orderBy: {loanDate: 'asc'}
-        })
-    }
+  async findAllLoans() {
+    return await this.prisma.loan.findMany({
+      include: { book: true },
+      orderBy: { loanDate: "asc" },
+    });
+  }
 
-    async createLoanTransaction(data: CreateLoanDTO){
-        return await this.prisma.$transaction([
-            this.prisma.loan.create({
-                data: {
-                    bookId: data.bookId,
-                    customerName: data.customerName,
-                    customerEmail: data.customerEmail,
-                    dueDate: data.dueDate
-                }
-            }),
-            this.prisma.book.update({
-                where: { id: data.bookId },
-                data: {
-                    availableQuantity: { decrement: 1 }
-                }
-            })
-        ])
-    }
+  async createLoanTransaction(data: CreateLoanDTO) {
+    return await this.prisma.$transaction([
+      this.prisma.loan.create({
+        data: {
+          bookId: data.bookId,
+          customerName: data.customerName,
+          customerEmail: data.customerEmail,
+          dueDate: data.dueDate,
+        },
+      }),
+      this.prisma.book.update({
+        where: { id: data.bookId },
+        data: {
+          availableQuantity: { decrement: 1 },
+        },
+      }),
+    ]);
+  }
 
-    async finishLoanTransaction(data: FinishLoanDTO){
-        return await this.prisma.$transaction([
-            this.prisma.loan.update({
-                where : { id: data.loanId},
-                data : {
-                    status: LoanStatus.DEVOLVIDO
-                }
-            }),
+  async finishLoanTransaction(data: FinishLoanDTO) {
+    return await this.prisma.$transaction(async (tx) => {
+      const loan = await tx.loan.findUnique({
+        where: { id: data.loanId },
+      });
 
-            this.prisma.book.update({
-                where: { id: data.bookId },
-                data: {
-                    availableQuantity : {increment: 1},
-                },
-            }),
-        ])
-    }
+      if (!loan) {
+        throw new Error("Empréstimo não encontrado");
+      }
+
+      const updatedLoan = await tx.loan.update({
+        where: { id: data.loanId },
+        data: {
+          status: LoanStatus.DEVOLVIDO,
+        },
+      });
+
+      const updatedBook = await tx.book.update({
+        where: { id: loan.bookId },
+        data: {
+          availableQuantity: { increment: 1 },
+        },
+      });
+
+      return {
+        loan: updatedLoan,
+        book: updatedBook,
+      };
+    });
+  }
 }
-

@@ -7,5 +7,4 @@ export interface CreateLoanDTO {
 
 export interface FinishLoanDTO {
     loanId : string,
-    bookId : string,
 }
