@@ -22,13 +22,14 @@ export class LoanController {
         customerEmail,
         dueDate: new Date(dueDate),
       };
-
+      
       const loan = await this.loanRepository.createLoanTransaction(data);
 
-      return res.status(200).json(loan);
+      return res.status(201).json(loan);
     } catch (error) {
       return res.status(500).json({
         message: "Erro ao criar empréstimos",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
@@ -36,10 +37,11 @@ export class LoanController {
   async read(req: Request, res: Response): Promise<Response> {
     try {
       const loans = await this.loanRepository.findAllLoans();
-      return res.status(201).json(loans);
+      return res.status(200).json(loans);
     } catch (error) {
       return res.status(404).json({
         message: "Erro ao buscar empréstimos",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
@@ -54,8 +56,9 @@ export class LoanController {
 
       return res.status(200).json(transactions);
     } catch (error) {
-      return res.status(400).json({
+      return res.status(500).json({
         message: "Erro ao finalizar empréstimo",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
