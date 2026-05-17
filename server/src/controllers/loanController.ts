@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { CreateLoanDTO } from "src/DTOs/loanDTO";
 import { LoanRepository } from "src/repositories/loanRepository";
 
 export class LoanController {
@@ -15,12 +16,14 @@ export class LoanController {
         });
       }
 
-      const loan = await this.loanRepository.createLoanTransaction({
+      const data: CreateLoanDTO = {
         bookId,
         customerName,
         customerEmail,
         dueDate: new Date(dueDate),
-      });
+      };
+
+      const loan = await this.loanRepository.createLoanTransaction(data);
 
       return res.status(200).json(loan);
     } catch (error) {
