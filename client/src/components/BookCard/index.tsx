@@ -78,7 +78,7 @@ export default function BookCard({
                 <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 gap-1 text-xs"
+                className="flex-1 gap-1 text-xs border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
                 onClick={() => onView(id)}
                 >
                     <Eye size={14} />

@@ -16,6 +16,9 @@ const MOCK_BOOKS: Omit<BookCardProps, "onView" | "onLoan" | "onDelete">[] = [
   { id: "6", title: "Curso de Física Básica 1",author: "Moysés Nussenzveig",       category: "CIENCIAS",    availableQuantity: 0 },
 ];
 
+function normalize(text: string): string {
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");    
+}
 
 export default function BooksPage() {
 
@@ -24,7 +27,7 @@ export default function BooksPage() {
 
   const filteredBooks = MOCK_BOOKS.filter((book) => {
     const matchesSearch =
-      book.title.toLowerCase().includes(search.toLowerCase()) || book.author.toLowerCase().includes(search.toLowerCase());
+      normalize(book.title).includes(normalize(search)) || normalize(book.author).includes(normalize(search));
 
     const matchesCategory = 
       category === "ALL" || book.category === category;
