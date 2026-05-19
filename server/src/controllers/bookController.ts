@@ -27,7 +27,7 @@ export class BookController {
 
   getAll = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const { search } = req.query;
+      const { search, category } = req.query;
       const filters: any = {};
 
       if (search) {
@@ -35,6 +35,10 @@ export class BookController {
           { title: { contains: String(search), mode: 'insensitive' } },
           { autor: { contains: String(search), mode: 'insensitive' } }
         ];
+      }
+
+      if (category) {
+        filters.category = String(category).toUpperCase();
       }
 
       const books = await bookRepository.findAllBooks(filters);
