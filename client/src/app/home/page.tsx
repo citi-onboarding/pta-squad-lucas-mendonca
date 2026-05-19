@@ -1,10 +1,12 @@
 import Header from "@/components/Header";
 import LibraryDataCard from "@/components/LibraryDataCard";
 import { BookOpen, Clock, AlertCircle } from "lucide-react";
+import { BooksChart } from "@/components/BooksChart";
+import { LoanStatusCard } from "@/components/LoanStatusCard";
+import { testLoans } from "@/testeStatus";     
 
 
-
-export default function TestPage() {
+export default function DashboardPage() {
   
   const livrosAtrasados = 12;
 
@@ -41,6 +43,13 @@ export default function TestPage() {
 
         </div>
       </main>
+
+      <div className="w-full px-6">
+        <BooksChart/>
+      </div>
+
+      <LoanStatusCard loans={testLoans} />
+      
     </div>
   );
 }

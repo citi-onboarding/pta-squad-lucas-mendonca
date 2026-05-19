@@ -5,8 +5,8 @@ export default function RegisterBookPage() {
     <div>
       <Header />
         <main className="p-8">
-          <h1 className="text-2xl font-bold text-gray-800">Novo Livro</h1>
-          <p className="text-gray-500">Cadastro de novo livro</p>
+          <h1 className="text-2xl font-bold text-gray-800">Cadastrar Novo Livro</h1>
+          <p className="text-gray-500">Adicione um novo livro ao acervo</p>
         </main>
     </div>
     
