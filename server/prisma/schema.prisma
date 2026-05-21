@@ -27,7 +27,7 @@ enum LoanStatus {
 model Book {
   id                String   @id @default(uuid())
   title             String
-  autor             String
+  author             String
   isbn              String   @unique
   publisher         String
   year              Int

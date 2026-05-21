@@ -33,7 +33,7 @@ export class BookController {
       if (search) {
         filters.OR = [
           { title: { contains: String(search), mode: 'insensitive' } },
-          { autor: { contains: String(search), mode: 'insensitive' } }
+          { author: { contains: String(search), mode: 'insensitive' } }
         ];
       }
 
