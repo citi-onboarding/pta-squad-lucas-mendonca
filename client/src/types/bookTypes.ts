@@ -12,4 +12,22 @@ export interface BookCardProps {
   onDelete: (id: string) => void;
 }
 
+enum Category {
+  ROMANCE = "ROMANCE",
+  INFANTIL = "INFANTIL",
+  TECNOLOGIA = "TECNOLOGIA",
+  HISTORIA = "HISTORIA",
+  CIENCIAS = "CIENCIAS"
+}
 
+export interface CreateBook {
+  title: string;
+  author: string; 
+  isbn: string;
+  publisher: string;
+  year: number;
+  totalQuantity: number;
+  category: Category;
+}
+
+export interface UpdateBook extends Partial<CreateBook> {}
