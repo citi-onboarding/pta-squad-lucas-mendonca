@@ -4,9 +4,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { bookSchema, BookFormData } from "@/types/book";
+import Image from "next/image";
+
+ // Static list of book categories and their corresponding images, kept outside the component for better performance.
+  const categories = [
+  { name: "Romance", image: require("@/assets/romance.png") },
+  { name: "Tecnologia", image: require("@/assets/tecnologia.png") },
+  { name: "História", image: require("@/assets/historia.png") },
+  { name: "Ciências", image: require("@/assets/ciencias.png") },
+  { name: "Infantil", image: require("@/assets/infantil.png") },
+    ];
+
 
 //Validation schema using Zod to enforce form rules and required fields
-
 export default function RegisterBookForm(){
 
     const router = useRouter();
@@ -31,8 +41,6 @@ export default function RegisterBookForm(){
     };
   };
 
-
-  const categories = ["Romance", "Tecnologia", "História", "Ciências", "Infantil"];
 
   // Book registration card layout 
   return (
@@ -100,13 +108,13 @@ export default function RegisterBookForm(){
           <h3 className="font-semibold text-gray-700 text-sm">Categoria</h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {categories.map((cat) => {
-              const isSelected = selectedCategory === cat;
+              const isSelected = selectedCategory === cat.name;
               return (
                 <button
-                  key={cat}
+                  key={cat.name}
                   type="button"
-                  onClick={() => setValue("category", cat, { shouldValidate: true })}
-                  className={`border rounded-xl p-20 flex items-center justify-center text-sm font-medium transition ${
+                  onClick={() => setValue("category", cat.name, { shouldValidate: true })}
+                  className={`border rounded-xl p-0 overflow-hidden flex items-center justify-center transition aspect-square ${
                     isSelected
                       ? "border-emerald-500 bg-emerald-50 text-emerald-700 font-semibold shadow-sm"
                       : errors.category
@@ -114,7 +122,13 @@ export default function RegisterBookForm(){
                         : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  {cat}
+                    <div className="w-full h-full relative flex items-center justify-center">
+                        <Image
+                            src={cat.image.default || cat.image}
+                            alt={cat.name}
+                            className="w-full h-full object-cover"/>
+                    </div>
+
                 </button>
               );
             })}
