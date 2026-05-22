@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
 import { CreateLoanDTO } from "src/DTOs/loanDTO";
 import { LoanRepository } from "src/repositories/loanRepository";
+import { BookRepository } from "src/repositories/bookRepository";
 
 export class LoanController {
-  constructor(private loanRepository: LoanRepository = new LoanRepository()) {}
+  constructor(
+    private loanRepository: LoanRepository = new LoanRepository(),
+    private bookRepository: BookRepository = new BookRepository(),
+  ) {}
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const { bookId, customerName, customerEmail, dueDate } = req.body;
-      const book = await this.loanRepository.findBookById(bookId);
+      const book = await this.bookRepository.findBookById(bookId);
 
       if (!book || book.availableQuantity <= 0) {
         return res.status(400).json({
@@ -22,7 +26,7 @@ export class LoanController {
         customerEmail,
         dueDate: new Date(dueDate),
       };
-      
+
       const loan = await this.loanRepository.createLoanTransaction(data);
 
       return res.status(201).json(loan);
@@ -34,7 +38,7 @@ export class LoanController {
     }
   }
 
-  async read(req: Request, res: Response): Promise<Response> {
+  async readAll(req: Request, res: Response): Promise<Response> {
     try {
       const loans = await this.loanRepository.findAllLoans();
       return res.status(200).json(loans);
@@ -42,6 +46,22 @@ export class LoanController {
       return res.status(404).json({
         message: "Erro ao buscar empréstimos",
         error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  async readById(req: Request, res: Response): Promise<Response> {
+    try {
+      const { loanId } = req.params;
+
+      const loan = await this.loanRepository.findLoanById({
+        loanId,
+      });
+
+      return res.status(200).json(loan);
+    } catch (error) {
+      return res.status(404).json({
+        message: "Erro ao buscar empréstimo específico",
       });
     }
   }
