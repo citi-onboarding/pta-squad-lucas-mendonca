@@ -1,11 +1,15 @@
-export interface CreateLoanDTO {
+import { CreateLoan, FinishLoan } from "@/types/loanTypes";
+import api from "./api";
 
+
+export const createLoan = async(loanData: CreateLoan) => {
+    return api.post(`/loans`, loanData)
 }
 
-export interface FinishLoanDTO {
-
+export const getAllLoans = async() => {
+    return api.get(`/loans`)
 }
 
-export interface LoanResponse {
- 
+export const finishLoan = async(loanData: FinishLoan) => {
+    return api.patch(`/loans/${loanData.loanId}`, loanData)
 }
