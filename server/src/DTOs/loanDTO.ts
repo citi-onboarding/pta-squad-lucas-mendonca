@@ -8,3 +8,5 @@ export interface CreateLoanDTO {
 export interface FinishLoanDTO {
     loanId : string,
 }
+
+export interface FindLoanDTO extends Partial<FinishLoanDTO>{}
