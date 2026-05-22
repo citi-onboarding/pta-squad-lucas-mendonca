@@ -1,4 +1,4 @@
-import { CreateLoan, FinishLoan } from "@/types/loanTypes";
+import { CreateLoan, FinishLoan, FindLoan } from "@/types/loanTypes";
 import api from "./api";
 
 
@@ -6,7 +6,7 @@ export const createLoan = async(loanData: CreateLoan) => {
     return api.post(`/loans`, loanData)
 }
 
-export const getAllLoans = async() => {
+export const findAllLoans = async() => {
     return api.get(`/loans`)
 }
 
