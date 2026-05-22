@@ -15,3 +15,5 @@ export interface CreateLoan {
 export interface FinishLoan {
     loanId : string
 }
+
+export interface FindLoan extends Partial<FinishLoan>{}

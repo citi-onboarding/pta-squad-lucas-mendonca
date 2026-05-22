@@ -10,6 +10,10 @@ export const getAllLoans = async() => {
     return api.get(`/loans`)
 }
 
+export const findLoanById = async(loanData: FindLoan) => {
+    return api.get(`/loans/${loanData.loanId}`)
+}
+
 export const finishLoan = async(loanData: FinishLoan) => {
     return api.patch(`/loans/${loanData.loanId}`, loanData)
 }
