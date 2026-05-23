@@ -176,7 +176,7 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
                           </div>
                           <p className="text-sm text-gray-500 mb-2">{loan.userEmail}</p>
                           <p className="text-xs text-gray-500">
-                            Locação: {formatDate(loan.dueDate)} &nbsp;&nbsp;|&nbsp;&nbsp; Previsão: {formatDate(loan.loanDate)}
+                            Locação: {formatDate(loan.loanDate)} &nbsp;&nbsp;|&nbsp;&nbsp; Previsão: {formatDate(loan.dueDate)}
                           </p>
                         </div>
 
