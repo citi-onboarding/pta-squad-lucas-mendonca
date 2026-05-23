@@ -75,8 +75,6 @@ export default function BooksPage() {
   };
 
   const handleRefreshCatalog = () => {
-    // Como você está usando MOCK_BOOKS por enquanto, isso é apenas um log.
-    // Quando integrar a API, aqui você chamará a função que busca os livros novamente.
     console.log("Atualizando lista de livros após alteração no modal...");
   };  
   const handleLoan = (id: string) => console.log("Emprestar:", id);
