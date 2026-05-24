@@ -65,9 +65,9 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
     }
   };
 
-  const handleSendReminder = (userEmail: string) => {
+  const handleSendReminder = (customerEmail: string) => {
 
-    alert(`Lembrete enviado com sucesso para ${userEmail}`);
+    alert(`Lembrete enviado com sucesso para ${customerEmail}`);
   };
 
   const getDynamicStatus = (loan: Loan) => {
@@ -169,12 +169,12 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
                         
                         <div>
                           <div className="flex items-center gap-3 mb-1">
-                            <span className="font-medium text-gray-800">{loan.userName}</span>
+                            <span className="font-medium text-gray-800">{loan.customerName}</span>
                             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeStyles[currentStatus]}`}>
                               {badgeLabels[currentStatus]}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-500 mb-2">{loan.userEmail}</p>
+                          <p className="text-sm text-gray-500 mb-2">{loan.customerEmail}</p>
                           <p className="text-xs text-gray-500">
                             Locação: {formatDate(loan.loanDate)} &nbsp;&nbsp;|&nbsp;&nbsp; Previsão: {formatDate(loan.dueDate)}
                           </p>
@@ -183,7 +183,7 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
                         <div className="flex items-center gap-3">
                           {currentStatus === 'ATRASADO' && (
                             <button 
-                              onClick={() => handleSendReminder(loan.userEmail)}
+                              onClick={() => handleSendReminder(loan.customerEmail)}
                               className="px-4 py-1.5 text-sm font-medium text-[#2C4A73] border border-[#2C4A73] rounded hover:bg-[#2C4A73]/10 transition-colors flex items-center gap-2"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>

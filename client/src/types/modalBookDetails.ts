@@ -1,8 +1,8 @@
 import { BookCategory } from '@/types/bookTypes';
 export interface Loan {
   id: string;
-  userName: string;
-  userEmail: string;
+  customerName: string;
+  customerEmail: string;
   loanDate: string; 
   dueDate: string;  
   status: 'EM_ANDAMENTO' | 'DEVOLVIDO';
