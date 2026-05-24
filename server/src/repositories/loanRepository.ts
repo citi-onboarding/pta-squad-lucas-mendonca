@@ -68,4 +68,15 @@ export class LoanRepository {
       };
     });
   }
+
+  async findLoansByBookId(bookId: string) {
+    return await this.prisma.loan.findMany({
+      where: {
+        bookId: bookId,
+      },
+      orderBy: {
+        loanDate: "desc",
+      },
+    });
+  }
 }
