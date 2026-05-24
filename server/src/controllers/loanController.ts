@@ -82,4 +82,19 @@ export class LoanController {
       });
     }
   }
+
+  async readByBookId(req: Request, res: Response): Promise<Response> {
+    try {
+      const { bookId } = req.params;
+
+      const loans = await this.loanRepository.findLoansByBookId(bookId);
+
+      return res.status(200).json(loans);
+    } catch (error) {
+      return res.status(500).json({
+        message: "Erro ao buscar os empréstimos deste livro",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
 }

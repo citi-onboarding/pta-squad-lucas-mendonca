@@ -17,3 +17,7 @@ export const findLoanById = async(loanData: FindLoan) => {
 export const finishLoan = async(loanData: FinishLoan) => {
     return api.patch(`/loans/${loanData.loanId}`, loanData)
 }
+
+export const findBookLoans = async(bookId: string) => {
+    return api.get(`/loans/book/${bookId}`)
+}
