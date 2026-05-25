@@ -20,7 +20,7 @@ export interface BookCardProps {
   category: BookCategory
   availableQuantity: number;
   onView: (id: string) => void;
-  onLoan: (id: string) => void;
+  onLoan: (id: string, title: string) => void;
   onDelete: (id: string) => void;
 }
 

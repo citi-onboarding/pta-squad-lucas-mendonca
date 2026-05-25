@@ -3,24 +3,10 @@ import { Eye, BookMarked, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardFooter} from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
-import cienciasCover from "@/assets/ciencias.png"
-import historiaCover from "@/assets/historia.png"
-import infantilCover from "@/assets/infantil.png"
-import romanceCover from "@/assets/romance.png"
-import tecnologiaCover from "@/assets/tecnologia.png"
-
+import { coverByCategory } from '@/utils';
 import { BookCardProps, BookCategory } from "@/types/bookTypes";
 
-const coverByCategory: Record<BookCategory, {src: string}> = {
-    ROMANCE:    romanceCover,
-    INFANTIL:   infantilCover,
-    TECNOLOGIA: tecnologiaCover,
-    HISTORIA:   historiaCover,
-    CIENCIAS:   cienciasCover,
-}
 
-{/**/}
 const categoryMeta: Record<BookCategory, { label: string; color: string }> = {
   ROMANCE:    { label: "Romance",    color: "text-green-600" },
   INFANTIL:   { label: "Infantil",   color: "text-teal-500"  },
@@ -28,7 +14,6 @@ const categoryMeta: Record<BookCategory, { label: string; color: string }> = {
   HISTORIA:   { label: "História",   color: "text-green-700" },
   CIENCIAS:   { label: "Ciências",   color: "text-teal-600"  },
 };
-{/**/}
 
 export default function BookCard({
     id,
@@ -89,7 +74,7 @@ export default function BookCard({
                 <Button
                 size="sm"
                 disabled={isOutOfStock}
-                onClick={() => onLoan(id)}
+                onClick={() => onLoan(id, title)}
                 className={`flex-1 gap-1 text-xs ${
                     isOutOfStock
                         ? "bg-gray-200 text-gray-400 hover:bg-gray-200"

@@ -5,15 +5,46 @@ import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
 import BookCard from "@/components/BookCard";
 import { BookCardProps } from "@/types/bookTypes";
+import { BookDetailsModal } from "@/components/BookDetailsModal";
+import { BookLoanModal } from "@/components/BookLoanModal";
 
 
 const MOCK_BOOKS: Omit<BookCardProps, "onView" | "onLoan" | "onDelete">[] = [
-  { id: "1", title: "Clean Code",              author: "Robert C. Martin",         category: "TECNOLOGIA", availableQuantity: 5 },
-  { id: "2", title: "O Pequeno Príncipe",      author: "Antoine de Saint-Exupéry", category: "INFANTIL",   availableQuantity: 8 },
-  { id: "3", title: "Dom Casmurro",            author: "Machado de Assis",         category: "ROMANCE",    availableQuantity: 0 },
-  { id: "4", title: "Casa-Grande & Senzala",   author: "Gilberto Freyre",         category: "HISTORIA",    availableQuantity: 3 },
-  { id: "5", title: "O Deserto dos Tártaros",  author: "Dino Buzzati",             category: "ROMANCE",    availableQuantity: 1 },
-  { id: "6", title: "Curso de Física Básica 1",author: "Moysés Nussenzveig",       category: "CIENCIAS",    availableQuantity: 0 },
+  { 
+    id: "967c6435-f8fe-470e-a07a-ffcbbc892f1c", 
+    title: "Harry Potter", 
+    author: "J.R.R. Tolkien", 
+    category: "ROMANCE", 
+    availableQuantity: 5 
+  },
+  { 
+    id: "8ed46451-8bc2-42d7-b785-cf0d8bc3aa4e", 
+    title: "Harry Potter", 
+    author: "J.R.R. Tolkien", 
+    category: "TECNOLOGIA", 
+    availableQuantity: 5 
+  },
+  { 
+    id: "39bdf87d-4e25-45bc-9e25-d1a5fc466861", 
+    title: "Introdução à Lógica Proposicional e Estrutural", 
+    author: "Alan Turing", 
+    category: "CIENCIAS", 
+    availableQuantity: 5 
+  },
+  { 
+    id: "e5f35a9b-a22e-4ba6-aaa1-d9583c179ad5", 
+    title: "Arquitetura e Construção: Guia The Sims", 
+    author: "Laura Caixão", 
+    category: "TECNOLOGIA", 
+    availableQuantity: 10 
+  },
+  { 
+    id: "c50c4145-ba55-40d5-b0fd-4f44c737d5af", 
+    title: "Diário de Sobrevivência no Velho Oeste", 
+    author: "Arthur Morgan", 
+    category: "HISTORIA", 
+    availableQuantity: 3 
+  }
 ];
 
 function normalize(text: string): string {
@@ -24,6 +55,10 @@ export default function BooksPage() {
 
   const [search, setSearch]     = useState("");
   const [category, setCategory] = useState("ALL");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false)
+  const [selectedBook, setSelectedBook] = useState({ id: "", title: ""})
 
   const filteredBooks = MOCK_BOOKS.filter((book) => {
     const matchesSearch =
@@ -34,9 +69,23 @@ export default function BooksPage() {
 
     return matchesSearch && matchesCategory;
   })
+  const handleView = (id: string) => {
+    setSelectedBookId(id);
+    setIsModalOpen(true);
+  };
 
-  const handleView = (id: string) => console.log("Ver:", id);
-  const handleLoan = (id: string) => console.log("Emprestar:", id);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBookId(null);
+  };
+
+  const handleRefreshCatalog = () => {
+    console.log("Atualizando lista de livros após alteração no modal...");
+  };  
+  const handleLoan = (id: string, title: string) => {
+    setSelectedBook({id: id, title: title})
+    setIsLoanModalOpen(true)
+  };
   const handleDelete = (id: string) => console.log("Deletar:", id);
 
 
@@ -61,19 +110,32 @@ export default function BooksPage() {
                     key={book.id}
                     {...book}
                     onView={handleView}
-                    onLoan={handleLoan}
+                    onLoan={() => handleLoan(book.id, book.title)}
                     onDelete={handleDelete}
                   />
                 ))}
+
               </div>
               ) : (
                 <p className="mt-16 text-center text-gray-400">
                   Nenhum livro encontrado.
                 </p>
               )}
-            
+           <BookDetailsModal
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              bookId={selectedBookId}
+              onRefreshCatalog={handleRefreshCatalog}
+            /> 
           </div>
         </main>
+        <BookLoanModal
+          isOpen={isLoanModalOpen}
+          onClose={() => setIsLoanModalOpen(false)}
+          bookId={selectedBook.id}
+          bookTitle={selectedBook.title}
+          onRefreshCatalog={() => {}}
+        />
     </div>
   );
 }
