@@ -2,7 +2,7 @@ import { Category } from '@prisma/client';
 
 export interface CreateBookDTO {
   title: string;
-  autor: string; 
+  author: string; 
   isbn: string;
   publisher: string;
   year: number;

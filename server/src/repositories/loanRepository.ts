@@ -1,13 +1,13 @@
 import { LoanStatus, PrismaClient } from "@prisma/client";
-import { CreateLoanDTO, FinishLoanDTO } from "src/DTOs/loanDTO";
+import { CreateLoanDTO, FinishLoanDTO, FindLoanDTO } from "src/DTOs/loanDTO";
 
 export class LoanRepository {
   private prisma = new PrismaClient();
 
-  async findBookById(bookId: string) {
-    return await this.prisma.book.findUnique({
+  async findLoanById(data: FindLoanDTO) {
+    return await this.prisma.loan.findUnique({
       where: {
-        id: bookId,
+        id: data.loanId,
       },
     });
   }
@@ -66,6 +66,17 @@ export class LoanRepository {
         loan: updatedLoan,
         book: updatedBook,
       };
+    });
+  }
+
+  async findLoansByBookId(bookId: string) {
+    return await this.prisma.loan.findMany({
+      where: {
+        bookId: bookId,
+      },
+      orderBy: {
+        loanDate: "desc",
+      },
     });
   }
 }

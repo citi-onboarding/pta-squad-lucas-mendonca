@@ -1,14 +1,13 @@
 import Header from "@/components/Header";
+import RegisterBookForm from "@/components/registerBookForm";   
 
 export default function RegisterBookPage() {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Header />
-        <main className="p-8">
-          <h1 className="text-2xl font-bold text-gray-800">Novo Livro</h1>
-          <p className="text-gray-500">Cadastro de novo livro</p>
-        </main>
+      <main className="p-8">
+        <RegisterBookForm />
+      </main>
     </div>
-    
   );
 }
