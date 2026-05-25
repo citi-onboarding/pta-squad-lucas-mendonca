@@ -1,14 +1,14 @@
 import React from 'react';
-import { Loan } from '@/types/loan';
+import { Loan } from '@/types/loanTypes';
 
 
 // Status Calculation Logic
 function calculateStatus(loan: Loan): 'Em andamento' | 'Devolvido' | 'Atrasado'{
-    if (loan. statusBank == 'Devolvido') 
+    if (loan.status === 'DEVOLVIDO') 
         return 'Devolvido';
 
     const hoje = new Date();
-    const dataDevolucao = new Date(loan.returnDate);
+    const dataDevolucao = new Date(loan.dueDate);
 
     if (hoje > dataDevolucao) return 'Atrasado';
     return 'Em andamento';
@@ -40,13 +40,13 @@ export function LoanStatusCard({ loans }: { loans: Loan[] }) {
 
             return (
               <tr key={loan.id} className="border-b">
-                <td className="p-2">{loan.book}</td>
-                <td className="p-2">{loan.client}</td>
+                <td className="p-2">{loan.book.title}</td>
+                <td className="p-2">{loan.customerName}</td>
                 <td className="p-2">
-                  {new Date(loan.rentalDate).toLocaleDateString("pt-BR")}
+                  {new Date(loan.loanDate).toLocaleDateString("pt-BR")}
                 </td>
                 <td className="p-2">
-                  {new Date(loan.returnDate).toLocaleDateString("pt-BR")}
+                  {new Date(loan.dueDate).toLocaleDateString("pt-BR")}
                 </td>
                 <td className="p-2">
                   <span

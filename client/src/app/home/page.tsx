@@ -1,15 +1,34 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import LibraryDataCard from "@/components/LibraryDataCard";
 import { BookOpen, Clock, AlertCircle } from "lucide-react";
 import { BooksChart } from "@/components/BooksChart";
 import { LoanStatusCard } from "@/components/LoanStatusCard";
-import { testLoans } from "@/testeStatus";     
-
+import { fetchDashboardData, type DashboardData } from "@/lib/dashboard";
 
 export default function DashboardPage() {
   
-  const livrosAtrasados = 12;
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetchDashboardData().then(setData).catch((err) => setError(err.message)).finally(() => setLoading(false))
+  }, []);
+  
+  if (loading) return <p>Carregando...</p>;
+  if (error)   return <p>Erro: {error}</p>;
+  if (!data)   return null;
+
+  const totalBooks = data.books.reduce((acc, book) => acc + book.totalQuantity, 0);
+  const totalLoans = data.loans.length;
+  const lateLoans  = data.loans.filter(loan => {
+      const isPastDue = new Date() > new Date(loan.dueDate);
+      return loan.status !== "DEVOLVIDO" && isPastDue;
+  }).length;
+  
   return (
     <div>
       <Header />
@@ -22,23 +41,23 @@ export default function DashboardPage() {
           
           <LibraryDataCard
             title="Total de Livros"
-            data="1,245"
+            data={totalBooks}
             icon={<BookOpen size={22}/>}
             variant="default"
           />
 
           <LibraryDataCard
             title="Empréstimos Ativos"
-            data="87"
+            data={totalLoans}
             icon={<Clock size={22}/>}
             variant="default"
           />
             
           <LibraryDataCard
             title="Livros Atrasados"
-            data={livrosAtrasados}
+            data={lateLoans}
             icon={<AlertCircle size={22}/>}
-            variant={livrosAtrasados > 0 ? "alert" : "default"}          
+            variant={lateLoans > 0 ? "alert" : "default"}          
           />
 
         </div>
@@ -48,7 +67,7 @@ export default function DashboardPage() {
         <BooksChart/>
       </div>
 
-      <LoanStatusCard loans={testLoans} />
+      <LoanStatusCard loans={data.loans} />
       
     </div>
   );

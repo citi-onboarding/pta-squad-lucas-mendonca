@@ -1,8 +1,20 @@
-enum Status {
-    EM_ANDAMENTO = "Em andamento",
-    DEVOLVIDO = "Devolvido",
-    ATRASADO = "Atrasado",
+import { Book } from "./bookTypes"
 
+enum Status {
+  EM_ANDAMENTO = "EM_ANDAMENTO",
+  DEVOLVIDO = "DEVOLVIDO",
+  ATRASADO = "ATRASADO",
+}
+
+export interface Loan {
+  id: string;
+  bookId: string;
+  book: Book;  
+  customerName: string;
+  customerEmail: string;
+  loanDate: string;
+  dueDate: string;
+  status: Status;
 }
 
 export interface CreateLoan {
