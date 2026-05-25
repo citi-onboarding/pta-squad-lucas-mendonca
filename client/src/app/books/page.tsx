@@ -6,6 +6,8 @@ import SearchInput from "@/components/SearchInput";
 import BookCard from "@/components/BookCard";
 import { BookCardProps } from "@/types/bookTypes";
 import { BookDetailsModal } from "@/components/BookDetailsModal";
+import { BookLoanModal } from "@/components/BookLoanModal";
+
 
 const MOCK_BOOKS: Omit<BookCardProps, "onView" | "onLoan" | "onDelete">[] = [
   { 
@@ -55,6 +57,9 @@ export default function BooksPage() {
   const [category, setCategory] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false)
+  const [selectedBook, setSelectedBook] = useState({ id: "", title: ""})
+
   const filteredBooks = MOCK_BOOKS.filter((book) => {
     const matchesSearch =
       normalize(book.title).includes(normalize(search)) || normalize(book.author).includes(normalize(search));
@@ -77,7 +82,10 @@ export default function BooksPage() {
   const handleRefreshCatalog = () => {
     console.log("Atualizando lista de livros após alteração no modal...");
   };  
-  const handleLoan = (id: string) => console.log("Emprestar:", id);
+  const handleLoan = (id: string, title: string) => {
+    setSelectedBook({id: id, title: title})
+    setIsLoanModalOpen(true)
+  };
   const handleDelete = (id: string) => console.log("Deletar:", id);
 
 
@@ -102,10 +110,11 @@ export default function BooksPage() {
                     key={book.id}
                     {...book}
                     onView={handleView}
-                    onLoan={handleLoan}
+                    onLoan={() => handleLoan(book.id, book.title)}
                     onDelete={handleDelete}
                   />
                 ))}
+
               </div>
               ) : (
                 <p className="mt-16 text-center text-gray-400">
@@ -120,6 +129,13 @@ export default function BooksPage() {
             /> 
           </div>
         </main>
+        <BookLoanModal
+          isOpen={isLoanModalOpen}
+          onClose={() => setIsLoanModalOpen(false)}
+          bookId={selectedBook.id}
+          bookTitle={selectedBook.title}
+          onRefreshCatalog={() => {}}
+        />
     </div>
   );
 }
