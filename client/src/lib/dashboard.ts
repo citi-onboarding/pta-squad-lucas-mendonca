@@ -10,21 +10,56 @@ export interface DashboardData {
   loans: Loan[];
 }
 
+function handleRequestError(
+  error: unknown,
+  defaultMessage: string
+): never {
+  console.error(defaultMessage, error);
+
+  if (error instanceof Error) {
+    throw new Error(error.message);
+  }
+
+  throw new Error(defaultMessage);
+}
+
 async function fetchBookData(): Promise<Book[]> {
-  const response = await findManyBooks();
-  return response.data;
+   try{
+    const response = await findManyBooks();
+    return response.data;
+   } catch (error){
+    handleRequestError(
+      error,
+      "Não foi possível carregar os livros"
+    )
+   } 
+    
 }
 
 async function fetchLoanData(): Promise<Loan[]> {
-  const response = await findAllLoans();
-  return response.data;
+  try {
+    const response = await findAllLoans();
+    return response.data;  
+  } catch (error) {
+    handleRequestError(
+      error,
+      "Não foi possível carregar os empréstimos"
+    )
+  }
 }
 
 export async function fetchDashboardData(): Promise<DashboardData> {
-  const [books, loans] = await Promise.all([
+  try {
+    const [books, loans] = await Promise.all([
     fetchBookData(),
     fetchLoanData(),
   ]);
 
   return { books, loans };
+  } catch (error) {
+    handleRequestError(
+      error,
+      "Erro ao carregar os dados do dashboard"
+    )
+  }
 }

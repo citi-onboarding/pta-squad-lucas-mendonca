@@ -15,12 +15,31 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchDashboardData().then(setData).catch((err) => setError(err.message)).finally(() => setLoading(false))
+    fetchDashboardData()
+    .then(setData)
+    .catch((err) => {
+      console.error(err);
+      setError(err.message);
+    })
+    .finally(() => setLoading(false));
   }, []);
   
   if (loading) return <p>Carregando...</p>;
   if (error)   return <p>Erro: {error}</p>;
   if (!data)   return null;
+
+  const booksByCategory = data.books.reduce<{ category: string; quantity: number }[]>(
+  (acc, book) => {
+    const existing = acc.find(item => item.category === book.category);
+    if (existing) {
+      existing.quantity += book.totalQuantity;
+    } else {
+      acc.push({ category: book.category, quantity: book.totalQuantity });
+    }
+    return acc;
+  },
+  []
+);
 
   const totalBooks = data.books.reduce((acc, book) => acc + book.totalQuantity, 0);
   const totalLoans = data.loans.length;
@@ -64,7 +83,7 @@ export default function DashboardPage() {
       </main>
 
       <div className="w-full px-6">
-        <BooksChart/>
+        <BooksChart data={booksByCategory}/>
       </div>
 
       <LoanStatusCard loans={data.loans} />
