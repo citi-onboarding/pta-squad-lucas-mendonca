@@ -11,6 +11,9 @@ export class BookRepository {
   async findAllBooks(filters: Prisma.BookWhereInput) {
     return await prisma.book.findMany({
       where: filters,
+      orderBy : {
+        title: "asc"
+      }
     });
   }
 
