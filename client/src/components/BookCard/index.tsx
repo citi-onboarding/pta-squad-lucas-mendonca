@@ -74,7 +74,7 @@ export default function BookCard({
                 <Button
                 size="sm"
                 disabled={isOutOfStock}
-                onClick={() => onLoan(id)}
+                onClick={() => onLoan(id, title)}
                 className={`flex-1 gap-1 text-xs ${
                     isOutOfStock
                         ? "bg-gray-200 text-gray-400 hover:bg-gray-200"
