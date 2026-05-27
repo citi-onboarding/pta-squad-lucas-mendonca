@@ -5,8 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { bookSchema, BookFormData } from "@/types/book";
 import Image from "next/image";
+import { useState } from "react";
+import { createBook } from "@/services/bookService";
 
- // Static list of book categories and their corresponding images, kept outside the component for better performance.
+
   const categories = [
   { name: "Romance", image: require("@/assets/romance.png") },
   { name: "Tecnologia", image: require("@/assets/tecnologia.png") },
@@ -15,13 +17,12 @@ import Image from "next/image";
   { name: "Infantil", image: require("@/assets/infantil.png") },
     ];
 
-
-//Validation schema using Zod to enforce form rules and required fields
 export default function RegisterBookForm(){
 
     const router = useRouter();
 
-    // Initialize React Hook Form integrated with Zod validation
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<BookFormData>({
       resolver: zodResolver(bookSchema),
       defaultValues:{
@@ -32,14 +33,42 @@ export default function RegisterBookForm(){
  //Watch the category field to dynamically update custom button styles when selected
   const selectedCategory = watch("category");
 
-  // Handles form submission and converts string inputs to absolute numbers before processing
-  const onSubmit = (data: BookFormData) => {
-    const finalData = {
-      ...data,
-      year: Number(data.year),
-      quantity: Number(data.quantity)
-    };
+  // Maps front-end category names to the expected back-end enum values (without special characters)
+ const categoryMap: Record<string, string> = {
+  Romance: "ROMANCE",
+  Tecnologia: "TECNOLOGIA",
+  História: "HISTORIA",
+  Ciências: "CIENCIAS",
+  Infantil: "INFANTIL",
+};
+
+const onSubmit = (data: BookFormData) => {
+  const payload = {
+    title: data.title,
+    author: data.author,
+    isbn: data.isbn,
+    publisher: data.publisher,
+    year: Number(data.year),
+    totalQuantity: Number(data.quantity), // Renamed from quantity to match CreateBookDTO
+    category: categoryMap[data.category] ?? data.category.toUpperCase(),
   };
+
+  handleRegisterBook(payload);
+};
+
+  const handleRegisterBook = async (payload: any) => {
+  try {
+    setIsSubmitting(true);
+    await createBook(payload);
+    alert("Livro cadastrado com sucesso!");
+    router.push("/books");
+  } catch (error) {
+    console.error("Erro ao cadastrar livro:", error);
+    alert("Ocorreu um erro ao cadastrar o livro. Tente novamente.");
+  } finally {
+    setIsSubmitting(false); // Always resets the loading state regardless of success or failure
+  }
+};
 
 
   // Book registration card layout 
@@ -146,9 +175,10 @@ export default function RegisterBookForm(){
           </button>
           <button
             type="submit"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm"
+            disabled={isSubmitting}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Salvar Livro
+            {isSubmitting ? "Salvando..." : "Salvar Livro"}
           </button>
         </div>
       </form>
@@ -156,8 +186,3 @@ export default function RegisterBookForm(){
     </div>
   );
 }
-
-
-
-
-
