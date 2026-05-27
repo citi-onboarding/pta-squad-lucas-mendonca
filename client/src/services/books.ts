@@ -2,7 +2,8 @@ import { CreateBook, UpdateBook } from "@/types/bookTypes";
 import api from "./api";
 
 export const createBook = async (bookData: CreateBook) => {
-    api.post('/books', bookData);
+    const response = await api.post('/books', bookData);
+    return response;
 }
 
 export const updateBook = async (id: string, bookData: UpdateBook) => {

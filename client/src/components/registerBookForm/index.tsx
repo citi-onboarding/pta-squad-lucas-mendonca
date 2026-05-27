@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { bookSchema, BookFormData } from "@/types/book";
 import Image from "next/image";
 import { useState } from "react";
-import { createBook } from "@/services/bookService";
+import { createBook } from "@/services/books";
 
 
   const categories = [
@@ -177,7 +177,7 @@ const onSubmit = (data: BookFormData) => {
             type="submit"
             disabled={isSubmitting}
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+             >
             {isSubmitting ? "Salvando..." : "Salvar Livro"}
           </button>
         </div>
