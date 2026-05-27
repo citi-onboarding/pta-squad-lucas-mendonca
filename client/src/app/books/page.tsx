@@ -1,58 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
 import BookCard from "@/components/BookCard";
 import { BookCardProps } from "@/types/bookTypes";
 import { BookDetailsModal } from "@/components/BookDetailsModal";
 import { BookLoanModal } from "@/components/BookLoanModal";
-
-
-const MOCK_BOOKS: Omit<BookCardProps, "onView" | "onLoan" | "onDelete">[] = [
-  { 
-    id: "967c6435-f8fe-470e-a07a-ffcbbc892f1c", 
-    title: "Harry Potter", 
-    author: "J.R.R. Tolkien", 
-    category: "ROMANCE", 
-    availableQuantity: 5 
-  },
-  { 
-    id: "8ed46451-8bc2-42d7-b785-cf0d8bc3aa4e", 
-    title: "Harry Potter", 
-    author: "J.R.R. Tolkien", 
-    category: "TECNOLOGIA", 
-    availableQuantity: 5 
-  },
-  { 
-    id: "39bdf87d-4e25-45bc-9e25-d1a5fc466861", 
-    title: "Introdução à Lógica Proposicional e Estrutural", 
-    author: "Alan Turing", 
-    category: "CIENCIAS", 
-    availableQuantity: 5 
-  },
-  { 
-    id: "e5f35a9b-a22e-4ba6-aaa1-d9583c179ad5", 
-    title: "Arquitetura e Construção: Guia The Sims", 
-    author: "Laura Caixão", 
-    category: "TECNOLOGIA", 
-    availableQuantity: 10 
-  },
-  { 
-    id: "c50c4145-ba55-40d5-b0fd-4f44c737d5af", 
-    title: "Diário de Sobrevivência no Velho Oeste", 
-    author: "Arthur Morgan", 
-    category: "HISTORIA", 
-    availableQuantity: 3 
-  }
-];
+import { findManyBooks } from "@/services/books"; 
 
 function normalize(text: string): string {
+  if (!text) return "";
   return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");    
 }
 
 export default function BooksPage() {
 
+  const [books, setBooks] = useState<any[]>([]);
   const [search, setSearch]     = useState("");
   const [category, setCategory] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,7 +24,20 @@ export default function BooksPage() {
   const [isLoanModalOpen, setIsLoanModalOpen] = useState(false)
   const [selectedBook, setSelectedBook] = useState({ id: "", title: ""})
 
-  const filteredBooks = MOCK_BOOKS.filter((book) => {
+  const loadCatalog = async () => {
+    try {
+      const response = await findManyBooks();
+      setBooks(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar o catálogo de livros:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadCatalog();
+  }, []);
+
+  const filteredBooks = books.filter((book) => {
     const matchesSearch =
       normalize(book.title).includes(normalize(search)) || normalize(book.author).includes(normalize(search));
 
@@ -80,7 +57,7 @@ export default function BooksPage() {
   };
 
   const handleRefreshCatalog = () => {
-    console.log("Atualizando lista de livros após alteração no modal...");
+    loadCatalog();
   };  
   const handleLoan = (id: string, title: string) => {
     setSelectedBook({id: id, title: title})
@@ -134,7 +111,7 @@ export default function BooksPage() {
           onClose={() => setIsLoanModalOpen(false)}
           bookId={selectedBook.id}
           bookTitle={selectedBook.title}
-          onRefreshCatalog={() => {}}
+          onRefreshCatalog={handleRefreshCatalog}
         />
     </div>
   );
