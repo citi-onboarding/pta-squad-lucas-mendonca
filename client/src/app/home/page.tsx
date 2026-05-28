@@ -69,7 +69,7 @@ export default function DashboardPage() {
             title="Empréstimos Ativos"
             data={totalLoans}
             icon={<Clock size={22}/>}
-            variant="default"
+            variant={totalLoans > 0 ? "active" : "alert"}
           />
             
           <LibraryDataCard

@@ -19,6 +19,7 @@ export default function LibraryDataCard({
     const iconStyles = {
         default: "bg-secondary-blue text-white",
         alert:   "bg-red-100 text-red-600",
+        active: "bg-emerald-500 text-white",
     }
 
     return(
