@@ -36,7 +36,7 @@ return (
 
             <div className="flex items-center gap-3">
                 <Image
-                  src="/img/logoCiti_semfundo.svg"
+                  src="/img/logoCiti_semfundo-azul.png"
                   alt="Logo Citi"
                   width={82.5}
                   height={35.99}
@@ -53,10 +53,10 @@ return (
 
                 const className = 
                     link.variant === "primary"
-                        ? "flex items-center gap-2 rounded-md bg-emerald-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-emerald-600"
+                        ? "flex items-center gap-2 rounded-md bg-primary-blue px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-tertiary-blue"
                         : `flex items-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
                             isActive
-                                ? "bg-emerald-100 text-emerald-700"
+                                ? "bg-secondary-blue text-white"
                                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                             }`; 
 

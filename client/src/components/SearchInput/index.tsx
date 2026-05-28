@@ -48,7 +48,7 @@ export default function SearchInput({onSearchChange, onCategoryChange}: SerchInp
                         bg-transparent
                         border border-gray-200 rounded-md
                         outline-none
-                        focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30
+                        focus:border-primary-blue focus:ring-1 focus:ring-primary-blue/30
                         transition-colors duration-150
                     "
                 />
@@ -64,7 +64,7 @@ export default function SearchInput({onSearchChange, onCategoryChange}: SerchInp
                     bg-white
                     border border-gray-200 rounded-md
                     outline-none
-                    focus:ring-1 focus:ring-emerald-500/30
+                    focus:ring-1 focus:ring-primary-blue/30
                     cursor-pointer
                     transition-colors duration-150
                 "            
