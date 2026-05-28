@@ -17,7 +17,7 @@ export default function LibraryDataCard({
 }: LibraryDataCardProps) {
 
     const iconStyles = {
-        default: "bg-emerald-100 text-emerald-600",
+        default: "bg-secondary-blue text-white",
         alert:   "bg-red-100 text-red-600",
     }
 

@@ -8,11 +8,11 @@ import { BookCardProps, BookCategory } from "@/types/bookTypes";
 
 
 const categoryMeta: Record<BookCategory, { label: string; color: string }> = {
-  ROMANCE:    { label: "Romance",    color: "text-green-600" },
-  INFANTIL:   { label: "Infantil",   color: "text-teal-500"  },
-  TECNOLOGIA: { label: "Tecnologia", color: "text-emerald-600" },
-  HISTORIA:   { label: "História",   color: "text-green-700" },
-  CIENCIAS:   { label: "Ciências",   color: "text-teal-600"  },
+  ROMANCE:    { label: "Romance",    color: "text-cyan-600" },
+  INFANTIL:   { label: "Infantil",   color: "text-blue-300"  },
+  TECNOLOGIA: { label: "Tecnologia", color: "text-cyan-700" },
+  HISTORIA:   { label: "História",   color: "text-blue-700" },
+  CIENCIAS:   { label: "Ciências",   color: "text-teal-800"  },
 };
 
 export default function BookCard({
@@ -63,7 +63,7 @@ export default function BookCard({
                 <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 gap-1 text-xs border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+                className="flex-1 gap-1 text-xs border-2 border-primary-blue text-primary-blue hover:bg-secondary-blue hover:text-white"
                 onClick={() => onView(id)}
                 >
                     <Eye size={14} />
@@ -78,7 +78,7 @@ export default function BookCard({
                 className={`flex-1 gap-1 text-xs ${
                     isOutOfStock
                         ? "bg-gray-200 text-gray-400 hover:bg-gray-200"
-                        : "bg-emerald-500 text-white hover:bg-emerald-600"
+                        : "bg-primary-blue text-white hover:bg-tertiary-blue"
                 }`}
                 >
                     <BookMarked size={14} />

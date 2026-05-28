@@ -21,7 +21,7 @@ interface BooksChartProps {
 const chartConfig = {
   quantity: {
     label: "Livros",
-    color: "#00C389",
+    color: "var(--secondary-blue)",
   },
 } satisfies ChartConfig;
 
@@ -52,7 +52,7 @@ export function BooksChart({ data }: BooksChartProps) {
                 
             <Bar
               dataKey="quantity"
-              fill="var(--color-quantity)"
+              fill="var(--color-secondary-blue)"
               radius={6}
             />
           </BarChart>
