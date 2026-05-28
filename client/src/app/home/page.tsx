@@ -42,7 +42,7 @@ export default function DashboardPage() {
 );
 
   const totalBooks = data.books.reduce((acc, book) => acc + book.totalQuantity, 0);
-  const totalLoans = data.loans.length;
+  const totalLoans = data.loans.filter(loan => loan.status === "EM_ANDAMENTO").length;
   const lateLoans  = data.loans.filter(loan => {
       const isPastDue = new Date() > new Date(loan.dueDate);
       return loan.status !== "DEVOLVIDO" && isPastDue;

@@ -15,7 +15,7 @@ export class LoanRepository {
   async findAllLoans() {
     return await this.prisma.loan.findMany({
       include: { book: true },
-      orderBy: { loanDate: "asc" },
+      orderBy: { loanDate: "desc" },
     });
   }
 
