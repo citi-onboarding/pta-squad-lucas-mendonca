@@ -6,7 +6,7 @@ interface LibraryDataCardProps {
     title: string,
     data: string | number;
     icon: ReactNode;
-    variant?: "default" | "alert"
+    variant?: "default" | "alert" | "active"
 }
 
 export default function LibraryDataCard({
