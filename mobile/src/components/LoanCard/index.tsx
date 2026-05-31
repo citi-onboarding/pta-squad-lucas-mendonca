@@ -29,22 +29,27 @@ function getDynamicStatus(loan: Loan) {
   return "EM_ANDAMENTO";
 }
 
-function getStatusLabel(status: Loan["status"]) {
-  if (status === "DEVOLVIDO") return "Devolvido";
-  if (status === "ATRASADO") return "Atrasado";
-  return "Em andamento";
-}
-
-function getStatusStyle(status: Loan["status"]) {
-  if (status === "DEVOLVIDO") return styles.statusReturned;
-  if (status === "ATRASADO") return styles.statusLate;
-  return styles.statusActive;
-}
-
-function getStatusTextStyle(status: Loan["status"]) {
-  if (status === "DEVOLVIDO") return styles.statusReturnedText;
-  if (status === "ATRASADO") return styles.statusLateText;
-  return styles.statusActiveText;
+function getStatusConfig(status: Loan["status"]) {
+  switch (status) {
+    case "DEVOLVIDO":
+      return {
+        label: "Devolvido",
+        style: styles.statusReturned,
+        textStyle: styles.statusReturnedText,
+      };
+    case "ATRASADO":
+      return {
+        label: "Atrasado",
+        style: styles.statusLate,
+        textStyle: styles.statusLateText,
+      };
+    default:
+      return {
+        label: "Em andamento",
+        style: styles.statusActive,
+        textStyle: styles.statusActiveText,
+      };
+  }
 }
 
 function getCategoryImage(category?: string) {
@@ -66,6 +71,7 @@ function getCategoryImage(category?: string) {
 
 export function LoanCard({ loan }: LoanCardProps) {
   const dynamicStatus = getDynamicStatus(loan);
+  const statusConfig = getStatusConfig(dynamicStatus);
 
   return (
     <View style={styles.card}>
@@ -80,9 +86,9 @@ export function LoanCard({ loan }: LoanCardProps) {
           {loan.book?.title ?? "Livro não informado"}
         </Text>
 
-        <View style={[styles.statusBadge, getStatusStyle(dynamicStatus)]}>
-          <Text style={[styles.statusText, getStatusTextStyle(dynamicStatus)]}>
-            {getStatusLabel(dynamicStatus)}
+        <View style={[styles.statusBadge, statusConfig.style]}>
+          <Text style={[styles.statusText, statusConfig.textStyle]}>
+            {statusConfig.label}
           </Text>
         </View>
 
