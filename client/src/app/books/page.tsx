@@ -21,15 +21,19 @@ export default function BooksPage() {
   const [category, setCategory] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false)
-  const [selectedBook, setSelectedBook] = useState({ id: "", title: ""})
+  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState({ id: "", title: ""});
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadCatalog = async () => {
     try {
+      setIsLoading(true)
       const response = await findManyBooks();
       setBooks(response.data);
     } catch (error) {
       console.error("Erro ao carregar o catálogo de livros:", error);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -80,7 +84,11 @@ export default function BooksPage() {
             onCategoryChange={setCategory}
             />
 
-            {filteredBooks.length > 0 ? (
+            {isLoading ? (
+              <p className="mt-16 text-center text-gray-500 font-medium">
+                Carregando catálogo de livros...
+              </p>
+            ) : filteredBooks.length > 0 ? (
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredBooks.map((book) => (
                   <BookCard

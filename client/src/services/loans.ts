@@ -1,4 +1,4 @@
-import { CreateLoan, FinishLoan, FindLoan } from "@/types/loanTypes";
+import { CreateLoan, UpdateLoanStatus, FindLoan } from "@/types/loanTypes";
 import api from "./api";
 
 
@@ -14,7 +14,7 @@ export const findLoanById = async(loanData: FindLoan) => {
     return api.get(`/loans/${loanData.loanId}`)
 }
 
-export const finishLoan = async(loanData: FinishLoan) => {
+export const updateLoanStatus = async(loanData: UpdateLoanStatus) => {
     return api.patch(`/loans/${loanData.loanId}`, loanData)
 }
 

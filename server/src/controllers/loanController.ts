@@ -69,15 +69,19 @@ export class LoanController {
   async patch(req: Request, res: Response): Promise<Response> {
     try {
       const { loanId } = req.params;
-
-      const transactions = await this.loanRepository.finishLoanTransaction({
+      const { status } = req.body;
+      if (!status) {
+        return res.status(400).json({ message: "O campo status é obrigatório." });
+      }
+      const transactions = await this.loanRepository.updateLoanStatus({
         loanId,
+        status,
       });
 
       return res.status(200).json(transactions);
     } catch (error) {
       return res.status(500).json({
-        message: "Erro ao finalizar empréstimo",
+        message: "Erro ao atualizar status do empréstimo",
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }
