@@ -1,6 +1,7 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts";
+
 
 import {
   Card,
@@ -11,6 +12,8 @@ import {
 
 import {
   ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
 
@@ -49,6 +52,7 @@ export function BooksChart({ data }: BooksChartProps) {
                     axisLine={true}
                     tickLine={false}
                 />
+                <ChartTooltip content={<ChartTooltipContent/>}/>
                 
             <Bar
               dataKey="quantity"
