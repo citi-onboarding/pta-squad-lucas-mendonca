@@ -97,4 +97,17 @@ export class LoanController {
       });
     }
   }
+
+  async getMetrics(req: Request, res: Response): Promise<Response> {
+    try {
+      const period = req.query.period?.toString() || "Desde sempre";
+
+      const metrics = await this.loanRepository.getLoansCountByCategory(period);
+
+      return res.status(200).json(metrics);
+    } catch (error) {
+      console.error("Erro ao buscar métricas:", error);
+      return res.status(500).json({ message: "Erro ao buscar métricas", error });
+    }
+  }
 }

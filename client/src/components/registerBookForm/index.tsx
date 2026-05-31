@@ -5,8 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { bookSchema, BookFormData } from "@/types/book";
 import Image from "next/image";
+import { useState } from "react";
+import { createBook } from "@/services/bookService";
 
- // Static list of book categories and their corresponding images, kept outside the component for better performance.
+
   const categories = [
   { name: "Romance", image: require("@/assets/romance.png") },
   { name: "Tecnologia", image: require("@/assets/tecnologia.png") },
@@ -15,13 +17,12 @@ import Image from "next/image";
   { name: "Infantil", image: require("@/assets/infantil.png") },
     ];
 
-
-//Validation schema using Zod to enforce form rules and required fields
 export default function RegisterBookForm(){
 
     const router = useRouter();
 
-    // Initialize React Hook Form integrated with Zod validation
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<BookFormData>({
       resolver: zodResolver(bookSchema),
       defaultValues:{
@@ -32,14 +33,42 @@ export default function RegisterBookForm(){
  //Watch the category field to dynamically update custom button styles when selected
   const selectedCategory = watch("category");
 
-  // Handles form submission and converts string inputs to absolute numbers before processing
-  const onSubmit = (data: BookFormData) => {
-    const finalData = {
-      ...data,
-      year: Number(data.year),
-      quantity: Number(data.quantity)
-    };
+  // Maps front-end category names to the expected back-end enum values (without special characters)
+ const categoryMap: Record<string, string> = {
+  Romance: "ROMANCE",
+  Tecnologia: "TECNOLOGIA",
+  História: "HISTORIA",
+  Ciências: "CIENCIAS",
+  Infantil: "INFANTIL",
+};
+
+const onSubmit = (data: BookFormData) => {
+  const payload = {
+    title: data.title,
+    author: data.author,
+    isbn: data.isbn,
+    publisher: data.publisher,
+    year: Number(data.year),
+    totalQuantity: Number(data.quantity), // Renamed from quantity to match CreateBookDTO
+    category: categoryMap[data.category] ?? data.category.toUpperCase(),
   };
+
+  handleRegisterBook(payload);
+};
+
+  const handleRegisterBook = async (payload: any) => {
+  try {
+    setIsSubmitting(true);
+    await createBook(payload);
+    alert("Livro cadastrado com sucesso!");
+    router.push("/books");
+  } catch (error) {
+    console.error("Erro ao cadastrar livro:", error);
+    alert("Ocorreu um erro ao cadastrar o livro. Tente novamente.");
+  } finally {
+    setIsSubmitting(false); // Always resets the loading state regardless of success or failure
+  }
+};
 
 
   // Book registration card layout 
@@ -60,28 +89,28 @@ export default function RegisterBookForm(){
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Título</label>
-            <input {...register("title")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("title")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.title && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Autor</label>
-            <input {...register("author")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("author")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.author && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">ISBN</label>
-            <input {...register("isbn")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("isbn")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.isbn && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Editora</label>
-            <input {...register("publisher")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("publisher")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.publisher && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
@@ -91,14 +120,14 @@ export default function RegisterBookForm(){
             <input
                 type="number"
                 {...register("year")}
-                className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
+                className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
                 {errors.year && (<p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>)}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Quantidade</label>
-            <input type="number" {...register("quantity")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+            <input type="number" {...register("quantity")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             {errors.quantity && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
         </div>
@@ -116,7 +145,7 @@ export default function RegisterBookForm(){
                   onClick={() => setValue("category", cat.name, { shouldValidate: true })}
                   className={`border rounded-xl p-0 overflow-hidden flex items-center justify-center transition aspect-square ${
                     isSelected
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 font-semibold shadow-sm"
+                      ? "border-primary-blue bg-secondary-blue text-white font-semibold shadow-sm"
                       : errors.category
                         ? "border-red-500 bg-white text-gray-600"
                         : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
@@ -140,15 +169,16 @@ export default function RegisterBookForm(){
           <button
             type="button"
             onClick={() => router.push("/books")}
-            className="border border-emerald-500 text-emerald-500 px-5 py-2.5 rounded-lg bg-white hover:bg-emerald-50 font-medium transition text-sm"
+            className="border border-primary-blue text-primary-blue px-5 py-2.5 rounded-lg bg-white hover:bg-secondary-blue hover:text-white font-medium transition text-sm"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm"
+            disabled={isSubmitting}
+            className="bg-tertiary-blue hover:bg-primary-blue text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Salvar Livro
+            {isSubmitting ? "Salvando..." : "Salvar Livro"}
           </button>
         </div>
       </form>
@@ -156,8 +186,3 @@ export default function RegisterBookForm(){
     </div>
   );
 }
-
-
-
-
-
