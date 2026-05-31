@@ -69,14 +69,14 @@ export default function DashboardPage() {
             title="Empréstimos Ativos"
             data={totalLoans}
             icon={<Clock size={22}/>}
-            variant={totalLoans > 0 ? "active" : "alert"}
+            variant="active"
           />
             
           <LibraryDataCard
             title="Livros Atrasados"
             data={lateLoans}
             icon={<AlertCircle size={22}/>}
-            variant={lateLoans > 0 ? "alert" : "default"}          
+            variant="alert"          
           />
 
         </div>
