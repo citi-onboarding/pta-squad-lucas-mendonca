@@ -6,7 +6,7 @@ interface LibraryDataCardProps {
     title: string,
     data: string | number;
     icon: ReactNode;
-    variant?: "default" | "alert"
+    variant?: "default" | "alert" | "active"
 }
 
 export default function LibraryDataCard({
@@ -19,6 +19,7 @@ export default function LibraryDataCard({
     const iconStyles = {
         default: "bg-secondary-blue text-white",
         alert:   "bg-red-100 text-red-600",
+        active: "bg-emerald-500 text-white",
     }
 
     return(
