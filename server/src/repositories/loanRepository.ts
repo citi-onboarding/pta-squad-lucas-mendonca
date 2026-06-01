@@ -15,7 +15,7 @@ export class LoanRepository {
   async findAllLoans() {
     return await this.prisma.loan.findMany({
       include: { book: true },
-      orderBy: { loanDate: "asc" },
+      orderBy: { loanDate: "desc" },
     });
   }
 
@@ -78,5 +78,60 @@ export class LoanRepository {
         loanDate: "desc",
       },
     });
+  }
+
+  private buildDateFilter(period: string) {
+    if (!period || period === "Desde sempre") return undefined;
+
+    const [year, semester] = period.split(".");
+    if (!year || !semester) return undefined;
+
+    if (semester === "1") {
+      return {
+        gte: new Date(`${year}-01-01T00:00:00.000Z`),
+        lte: new Date(`${year}-06-30T23:59:59.999Z`),
+      };
+    } else if (semester === "2") {
+      return {
+        gte: new Date(`${year}-07-01T00:00:00.000Z`),
+        lte: new Date(`${year}-12-31T23:59:59.999Z`),
+      };
+    }
+    return undefined;
+  }
+
+  async getLoansCountByCategory(period: string) {
+    const dateFilter = this.buildDateFilter(period);
+    const whereCondition = dateFilter ? { loanDate: dateFilter } : {};
+
+    const booksData = await this.prisma.book.findMany({
+      select: {
+        category: true,
+        _count: {
+          select: {
+            loans: {
+              where: whereCondition,
+            },
+          },
+        },
+      },
+    });
+
+    const groupedMetrics = booksData.reduce((acc, curr) => {
+      const category = curr.category;
+      const count = curr._count.loans;
+
+      if (!acc[category]) {
+        acc[category] = 0;
+      }
+      acc[category] += count;
+
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(groupedMetrics).map(([category, count]) => ({
+      category,
+      count,
+    }));
   }
 }
