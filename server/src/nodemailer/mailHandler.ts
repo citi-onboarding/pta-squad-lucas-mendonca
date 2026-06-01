@@ -1,7 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer"
-import dotenv from 'dotenv';
 
-dotenv.config();
 
 let transporter: Transporter | null = null;
 
@@ -11,14 +9,14 @@ export function getTransporter(): Transporter {
     }
 
     transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASSWORD,
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASSWORD,
         },   
     });
 
-    return transporter;
+  return transporter;
 }
 
 export async function MailHandler(emailConfig: {
@@ -26,9 +24,9 @@ export async function MailHandler(emailConfig: {
   userEmail: string;
   subjectText: string;
   html: string;
-}) {
+}): Promise<boolean> {
   try {
-    const transport = getTransporter(); // pega o existente ou cria uma vez
+    const transport = getTransporter();
 
     await transport.sendMail({
       from: process.env.EMAIL,
@@ -37,9 +35,10 @@ export async function MailHandler(emailConfig: {
       html: emailConfig.html,
     });
 
+    console.log(`✅ E-mail enviado para: ${emailConfig.userEmail}`);
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(`❌ Falha ao enviar e-mail para: ${emailConfig.userEmail}`, error);
     return false;
   }
 }
