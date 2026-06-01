@@ -27,12 +27,15 @@ export function BookLoanModal({
   async function onSubmit(data: LoanFormData) {
     try {
       setIsSubmitting(true);
+      
+      const dueDate = new Date(data.dueDate);
+      dueDate.setUTCHours(23, 59, 59, 999);
 
       await createLoan({
         bookId,
         customerName: data.customerName,
         customerEmail: data.customerEmail,
-        dueDate: new Date(data.dueDate),
+        dueDate,
       });
 
       alert("Empréstimo realizado com sucesso!");
