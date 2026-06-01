@@ -1,5 +1,4 @@
 export interface OverdueEmailPayload {
-  loanId: string;
   userEmail: string;
   userName: string;
   bookTitle: string;
