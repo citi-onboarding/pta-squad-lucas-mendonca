@@ -27,12 +27,15 @@ export function BookLoanModal({
   async function onSubmit(data: LoanFormData) {
     try {
       setIsSubmitting(true);
+      
+      const dueDate = new Date(data.dueDate);
+      dueDate.setUTCHours(23, 59, 59, 999);
 
       await createLoan({
         bookId,
         customerName: data.customerName,
         customerEmail: data.customerEmail,
-        dueDate: new Date(data.dueDate),
+        dueDate,
       });
 
       alert("Empréstimo realizado com sucesso!");
@@ -98,7 +101,7 @@ export function BookLoanModal({
               className="mt-2 h-12 w-full rounded-md border px-4"
             />
             {errors.dueDate && (
-              <p className="text-sm text-red-500">*Este é um campo obrigatório.</p>
+              <p className="text-sm text-red-500">*Insira data válida.</p>
             )}
           </div>
 

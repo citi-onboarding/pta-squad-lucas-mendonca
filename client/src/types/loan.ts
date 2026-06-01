@@ -12,10 +12,8 @@ export const loanSchema = z.object({
         today.setHours(0,0,0,0)
         dueDate.setHours(0,0,0,0)
 
-        const maxDate = new Date(today)
-        maxDate.setDate(today.getDate() + 14)
-        return dueDate >= today && dueDate <= maxDate
-    }, {message: "A data deve ser entre hoje e no máximo 14 dias depois"})
+        return dueDate >= today
+    }, "A data deve ser depois de hoje.")
 });
 
 export type LoanFormData = z.infer<typeof loanSchema>;
