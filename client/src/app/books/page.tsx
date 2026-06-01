@@ -7,7 +7,7 @@ import BookCard from "@/components/BookCard";
 import { BookCardProps } from "@/types/bookTypes";
 import { BookDetailsModal } from "@/components/BookDetailsModal";
 import { BookLoanModal } from "@/components/BookLoanModal";
-import { findManyBooks } from "@/services/books"; 
+import { findManyBooks, deleteBook } from "@/services/books"; 
 
 function normalize(text: string): string {
   if (!text) return "";
@@ -63,7 +63,24 @@ export default function BooksPage() {
     setSelectedBook({id: id, title: title})
     setIsLoanModalOpen(true)
   };
-  const handleDelete = (id: string) => console.log("Deletar:", id);
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Tem certeza que deseja deletar este livro?")
+    if (!confirmDelete) return;
+
+    try{
+
+      await deleteBook(id);
+      handleRefreshCatalog();
+    }catch(error:any){
+      console.error("Erro ao deletar o livro: ", error);
+      if(error.response?.status ===400){
+        alert("O livro não pode ser apagado pois tem um empréstimo em andamento ou atrasado.")
+      }
+      else{
+        alert("Ocorreu um erro inesperado ao tentar deletar o livro")
+      }
+    }
+  };
 
 
   return (
