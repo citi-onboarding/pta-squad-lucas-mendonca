@@ -1,13 +1,9 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import {
   ChartContainer,
@@ -29,54 +25,89 @@ const chartConfig = {
 
 export function BooksChart({ data }: BooksChartProps) {
   // 'books' for Books by Category | 'loans' for Loans by Category
-  const [chartType, setChartType] = useState<'books' | 'loans'>('books');
+  const [chartType, setChartType] = useState<"books" | "loans">("books");
 
   // Semester filter control (default shows full history)
-  const [selectedSemester, setSelectedSemester] = useState('Desde sempre');
+  const [selectedSemester, setSelectedSemester] = useState("Desde sempre");
 
   return (
     <Card className="w-full rounded-lg border border-slate-200 bg-white shadow-md px-6">
       <CardHeader className="px-5 pt-5 pb-2">
-
-        <div className="flex justify-between items-center w-full mb-4">
-
+        <div className="flex justify-between items-center w-full mb-4 py-4 gap-4">
           {/* Main selector — replaces the static title */}
-          <select
-            value={chartType}
-            onChange={(e) => setChartType(e.target.value as 'books' | 'loans')}
-            className="text-sm font-semibold text-slate-900 bg-transparent outline-none cursor-pointer"
-          >
-            <option value="books">Livros por Categoria</option>
-            <option value="loans">Empréstimos por Categoria</option>
-          </select>
+          <div className="relative inline-flex items-center">
+            <select
+              value={chartType}
+              onChange={(e) =>
+                setChartType(e.target.value as "books" | "loans")
+              }
+              className="appearance-none w-full bg-white border border-slate-300 rounded-lg py-2 pl-4 pr-10 text-sm font-semibold text-slate-800 shadow-sm outline-none cursor-pointer transition-all hover:border-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+            >
+              <option value="books">Livros por Categoria</option>
+              <option value="loans">Empréstimos por Categoria</option>
+            </select>
+            {/* Seta customizada */}
+            <svg
+              className="pointer-events-none absolute right-3 h-4 w-4 text-slate-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
 
           {/* Semester selector — only visible when "Empréstimos por Categoria" is active */}
-          {chartType === 'loans' && (
-            <select
-              value={selectedSemester}
-              onChange={(e) => setSelectedSemester(e.target.value)}
-              className="border rounded-md px-3 py-1 text-sm bg-white outline-none focus:border-emerald-500"
-            >
-              <option value="Desde sempre">Desde sempre</option>
-              <option value="2022.1">2022.1</option>
-              <option value="2022.2">2022.2</option>
-              <option value="2023.1">2023.1</option>
-              <option value="2023.2">2023.2</option>
-              <option value="2024.1">2024.1</option>
-              <option value="2024.2">2024.2</option>
-              <option value="2025.1">2025.1</option>
-              <option value="2025.2">2025.2</option>
-              <option value="2026.1">2026.1</option>
-            </select>
+          {chartType === "loans" && (
+            <div className="relative inline-flex items-center">
+              <select
+                value={selectedSemester}
+                onChange={(e) => setSelectedSemester(e.target.value)}
+                className="appearance-none w-full bg-white border border-slate-300 rounded-lg py-2 pl-4 pr-10 text-sm font-medium text-slate-700 shadow-sm outline-none cursor-pointer transition-all hover:border-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="Desde sempre">Desde sempre</option>
+                <option value="2026.1">2026.1</option>
+                <option value="2025.2">2025.2</option>
+                <option value="2025.1">2025.1</option>
+                <option value="2024.2">2024.2</option>
+                <option value="2024.1">2024.1</option>
+                <option value="2023.2">2023.2</option>
+                <option value="2023.1">2023.1</option>
+                <option value="2022.2">2022.2</option>
+                <option value="2022.1">2022.1</option>
+              </select>
+              {/* Seta customizada */}
+              <svg
+                className="pointer-events-none absolute right-3 h-4 w-4 text-slate-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
           )}
-
         </div>
       </CardHeader>
 
       <CardContent className="px-5 pb-5 pt-0">
         <ChartContainer config={chartConfig} className="h-[350px] w-full">
           <BarChart accessibilityLayer data={data}>
-            <CartesianGrid vertical={false} strokeDasharray="8 8" stroke="#dbdee2"/>
+            <CartesianGrid
+              vertical={false}
+              strokeDasharray="8 8"
+              stroke="#dbdee2"
+            />
             <XAxis
               dataKey="category"
               tickLine={false}
@@ -88,7 +119,7 @@ export function BooksChart({ data }: BooksChartProps) {
               axisLine={true}
               tickLine={false}
             />
-            <ChartTooltip content={<ChartTooltipContent/>}/>
+            <ChartTooltip content={<ChartTooltipContent />} />
             <Bar
               dataKey="quantity"
               fill="var(--color-secondary-blue)"
