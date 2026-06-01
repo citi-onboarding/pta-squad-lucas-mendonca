@@ -101,7 +101,7 @@ export function BookLoanModal({
               className="mt-2 h-12 w-full rounded-md border px-4"
             />
             {errors.dueDate && (
-              <p className="text-sm text-red-500">*Este é um campo obrigatório.</p>
+              <p className="text-sm text-red-500">*Insira data válida.</p>
             )}
           </div>
 
