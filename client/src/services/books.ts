@@ -20,7 +20,3 @@ export const findBookById = (id: string) => {
 export const findManyBooks = (filters?: { search?: string; category?: string }) => {
     return api.get<Book[]>('/books', { params: filters });
 };
-
-export const getLoanMetricsByCategory = (period: string) => {
-  return api.get(`/loan/metrics?period=${period}`);
-};

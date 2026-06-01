@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { getLoanMetricsByCategory } from "@/services/loans"; 
 
 interface BooksChartProps {
   data: { category: string; quantity: number }[];
@@ -18,23 +18,48 @@ interface BooksChartProps {
 
 const chartConfig = {
   quantity: {
-    label: "Livros",
+    label: "Quantidade",
     color: "var(--secondary-blue)",
   },
 } satisfies ChartConfig;
 
-export function BooksChart({ data }: BooksChartProps) {
-  // 'books' for Books by Category | 'loans' for Loans by Category
+export function BooksChart({ data: booksData }: BooksChartProps) {
   const [chartType, setChartType] = useState<"books" | "loans">("books");
-
-  // Semester filter control (default shows full history)
   const [selectedSemester, setSelectedSemester] = useState("Desde sempre");
+  
+  const [loanData, setLoanData] = useState<{ category: string; quantity: number }[]>([]);
+  const [isLoadingLoans, setIsLoadingLoans] = useState(false);
+
+  useEffect(() => {
+    if (chartType === "loans") {
+      setIsLoadingLoans(true);
+      
+      const periodParam = selectedSemester === "Desde sempre" ? "" : selectedSemester;
+
+      getLoanMetricsByCategory(periodParam)
+        .then((response) => {
+          const formattedData = response.data.map((item: { category: string; count: number }) => ({
+            category: item.category,
+            quantity: item.count,
+          }));
+          setLoanData(formattedData);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar métricas de empréstimos:", error);
+        })
+        .finally(() => {
+          setIsLoadingLoans(false);
+        });
+    }
+  }, [chartType, selectedSemester]);
+
+  const displayData = chartType === "books" ? booksData : loanData;
 
   return (
     <Card className="w-full rounded-lg border border-slate-200 bg-white shadow-md px-6">
       <CardHeader className="px-5 pt-5 pb-2">
         <div className="flex justify-between items-center w-full mb-4 py-4 gap-4">
-          {/* Main selector — replaces the static title */}
+          
           <div className="relative inline-flex items-center">
             <select
               value={chartType}
@@ -46,7 +71,7 @@ export function BooksChart({ data }: BooksChartProps) {
               <option value="books">Livros por Categoria</option>
               <option value="loans">Empréstimos por Categoria</option>
             </select>
-            {/* Seta customizada */}
+            
             <svg
               className="pointer-events-none absolute right-3 h-4 w-4 text-slate-500"
               fill="none"
@@ -62,7 +87,6 @@ export function BooksChart({ data }: BooksChartProps) {
             </svg>
           </div>
 
-          {/* Semester selector — only visible when "Empréstimos por Categoria" is active */}
           {chartType === "loans" && (
             <div className="relative inline-flex items-center">
               <select
@@ -81,7 +105,6 @@ export function BooksChart({ data }: BooksChartProps) {
                 <option value="2022.2">2022.2</option>
                 <option value="2022.1">2022.1</option>
               </select>
-              {/* Seta customizada */}
               <svg
                 className="pointer-events-none absolute right-3 h-4 w-4 text-slate-500"
                 fill="none"
@@ -101,32 +124,37 @@ export function BooksChart({ data }: BooksChartProps) {
       </CardHeader>
 
       <CardContent className="px-5 pb-5 pt-0">
-        <ChartContainer config={chartConfig} className="h-[350px] w-full">
-          <BarChart accessibilityLayer data={data}>
-            <CartesianGrid
-              vertical={false}
-              strokeDasharray="8 8"
-              stroke="#dbdee2"
-            />
-            <XAxis
-              dataKey="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={true}
-            />
-            <YAxis
-              ticks={[0, 80, 160, 240, 320]}
-              axisLine={true}
-              tickLine={false}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar
-              dataKey="quantity"
-              fill="var(--color-secondary-blue)"
-              radius={6}
-            />
-          </BarChart>
-        </ChartContainer>
+        {isLoadingLoans ? (
+          <div className="h-[350px] w-full flex items-center justify-center text-slate-500">
+            Carregando dados de empréstimos...
+          </div>
+        ) : (
+          <ChartContainer config={chartConfig} className="h-[350px] w-full">
+            <BarChart accessibilityLayer data={displayData}>
+              <CartesianGrid
+                vertical={false}
+                strokeDasharray="8 8"
+                stroke="#dbdee2"
+              />
+              <XAxis
+                dataKey="category"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={true}
+              />
+              <YAxis
+                axisLine={true}
+                tickLine={false}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Bar
+                dataKey="quantity"
+                fill="var(--color-secondary-blue)"
+                radius={6}
+              />
+            </BarChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );
