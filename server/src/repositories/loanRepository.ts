@@ -1,5 +1,5 @@
 import { LoanStatus, PrismaClient } from "@prisma/client";
-import { CreateLoanDTO, FinishLoanDTO, FindLoanDTO } from "src/DTOs/loanDTO";
+import { CreateLoanDTO, UpdateLoanStatusDTO, FindLoanDTO } from "src/DTOs/loanDTO";
 
 export class LoanRepository {
   private prisma = new PrismaClient();
@@ -38,7 +38,20 @@ export class LoanRepository {
     ]);
   }
 
-  async finishLoanTransaction(data: FinishLoanDTO) {
+  async updateLoanStatus(data: UpdateLoanStatusDTO) {
+
+    if (data.status === LoanStatus.ATRASADO) {
+      const updatedLoan = await this.prisma.loan.update({
+        where: { id: data.loanId },
+        data: {
+          status: LoanStatus.ATRASADO,
+        },
+      });
+
+      return {
+        loan: updatedLoan, 
+      };
+    }
     return await this.prisma.$transaction(async (tx) => {
       const loan = await tx.loan.findUnique({
         where: { id: data.loanId },
