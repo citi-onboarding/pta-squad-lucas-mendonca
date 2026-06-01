@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { bookSchema, BookFormData } from "@/types/book";
 import Image from "next/image";
 import { useState } from "react";
-import { createBook } from "@/services/bookService";
+import { createBook } from "@/services/books";
 
 
   const categories = [
