@@ -169,14 +169,14 @@ const onSubmit = (data: BookFormData) => {
           <button
             type="button"
             onClick={() => router.push("/books")}
-            className="border border-primary-blue text-primary-blue px-5 py-2.5 rounded-lg bg-white hover:bg-secondary-blue hover:text-white font-medium transition text-sm"
+            className="border border-primary-blue text-primary-blue px-5 py-2.5 rounded-lg bg-white hover:bg-secondary-blue hover:text-white font-medium text-sm shadow-sm transition-transform delay-100 duration-300 ease-in-out transform-gpu hover:-translate-y-1 hover:scale-105"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-tertiary-blue hover:bg-primary-blue text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-primary-blue hover:bg-tertiary-blue text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-sm transition-transform delay-100 duration-300 ease-in-out transform-gpu hover:-translate-y-1 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Salvando..." : "Salvar Livro"}
           </button>

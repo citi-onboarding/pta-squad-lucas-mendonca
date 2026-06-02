@@ -23,7 +23,7 @@ export default function LibraryDataCard({
     }
 
     return(
-        <Card>
+        <Card className="group transition-transform duration-300 ease-in-out transform-gpu hover:scale-105">
             <CardContent className="flex items-center gap-4 p-5">
                 <div className={`rounded-lg p-3 ${iconStyles[variant]}`}>
                     {icon}
