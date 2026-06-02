@@ -21,3 +21,7 @@ export const updateLoanStatus = async(loanData: UpdateLoanStatus) => {
 export const findBookLoans = async(bookId: string) => {
     return api.get(`/loans/book/${bookId}`)
 }
+
+export const getLoanMetricsByCategory = (period: string) => {
+  return api.get(`/loans/metrics?period=${period}`);
+};
