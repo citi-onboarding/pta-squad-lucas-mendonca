@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { findBookById } from '@/services/books';
-import { findBookLoans, finishLoan } from '@/services/loans'; 
+import { findBookLoans, updateLoanStatus } from '@/services/loans'; 
 import { Book, BookDetailsModalProps, Loan } from '@/types/modalBookDetails';
 import { coverByCategory } from '@/utils/index';
 
@@ -31,6 +31,22 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
       const bookData = bookResponse.data;
       const loansData = loansResponse.data;
 
+      let hasUpdates = false;
+
+      for (const loan of loansData) {
+        const isPastDue = new Date() > new Date(loan.dueDate);
+        
+        if (loan.status === 'EM_ANDAMENTO' && isPastDue) {
+          await updateLoanStatus({ loanId: loan.id, status: 'ATRASADO' });
+          loan.status = 'ATRASADO';
+          hasUpdates = true;
+        }
+      }
+
+      if (hasUpdates) {
+        onRefreshCatalog();
+      }
+
       setBook({
         ...bookData,
         loans: loansData,
@@ -52,7 +68,7 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
 
   const handleFinishLoan = async (loanId: string) => {
     try {
-      await finishLoan({ loanId }); 
+      await updateLoanStatus({ loanId, status: 'DEVOLVIDO' }); 
       
       console.log(`Empréstimo ${loanId} encerrado com sucesso na API.`);
       
@@ -64,6 +80,16 @@ export const BookDetailsModal: React.FC<BookDetailsModalProps> = ({
       console.error("Erro ao encerrar empréstimo na API:", error);
     }
   };
+
+  const handleLateLoans = async (loanId: string) => {
+  try {
+    await updateLoanStatus({ loanId, status: 'ATRASADO' }); 
+    console.log(`Empréstimo ${loanId} atualizado para ATRASADO no banco de dados.`);
+    onRefreshCatalog()
+  } catch (error) {
+    console.error(`Erro ao marcar empréstimo ${loanId} como atrasado:`, error);
+  }
+};
 
   const handleSendReminder = (customerEmail: string) => {
 

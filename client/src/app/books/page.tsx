@@ -7,7 +7,7 @@ import BookCard from "@/components/BookCard";
 import { BookCardProps } from "@/types/bookTypes";
 import { BookDetailsModal } from "@/components/BookDetailsModal";
 import { BookLoanModal } from "@/components/BookLoanModal";
-import { findManyBooks } from "@/services/books"; 
+import { findManyBooks, deleteBook } from "@/services/books"; 
 
 function normalize(text: string): string {
   if (!text) return "";
@@ -21,15 +21,19 @@ export default function BooksPage() {
   const [category, setCategory] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false)
-  const [selectedBook, setSelectedBook] = useState({ id: "", title: ""})
+  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState({ id: "", title: ""});
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadCatalog = async () => {
     try {
+      setIsLoading(true)
       const response = await findManyBooks();
       setBooks(response.data);
     } catch (error) {
       console.error("Erro ao carregar o catálogo de livros:", error);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -63,7 +67,24 @@ export default function BooksPage() {
     setSelectedBook({id: id, title: title})
     setIsLoanModalOpen(true)
   };
-  const handleDelete = (id: string) => console.log("Deletar:", id);
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Tem certeza que deseja deletar este livro?")
+    if (!confirmDelete) return;
+
+    try{
+
+      await deleteBook(id);
+      handleRefreshCatalog();
+    }catch(error:any){
+      console.error("Erro ao deletar o livro: ", error);
+      if(error.response?.status ===400){
+        alert("O livro não pode ser apagado pois tem um empréstimo em andamento ou atrasado.")
+      }
+      else{
+        alert("Ocorreu um erro inesperado ao tentar deletar o livro")
+      }
+    }
+  };
 
 
   return (
@@ -80,7 +101,11 @@ export default function BooksPage() {
             onCategoryChange={setCategory}
             />
 
-            {filteredBooks.length > 0 ? (
+            {isLoading ? (
+              <p className="mt-16 text-center text-gray-500 font-medium">
+                Carregando catálogo de livros...
+              </p>
+            ) : filteredBooks.length > 0 ? (
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredBooks.map((book) => (
                   <BookCard

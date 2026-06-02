@@ -1,3 +1,5 @@
+import { LoanStatus } from "@prisma/client";
+
 export interface CreateLoanDTO {
     bookId : string,
     customerName : string,
@@ -5,8 +7,9 @@ export interface CreateLoanDTO {
     dueDate : Date,
 }
 
-export interface FinishLoanDTO {
-    loanId : string,
+export interface UpdateLoanStatusDTO {
+    loanId : string;
+    status: LoanStatus
 }
 
-export interface FindLoanDTO extends Partial<FinishLoanDTO>{}
+export interface FindLoanDTO extends Partial<UpdateLoanStatusDTO>{}
