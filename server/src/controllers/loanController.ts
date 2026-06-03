@@ -69,15 +69,19 @@ export class LoanController {
   async patch(req: Request, res: Response): Promise<Response> {
     try {
       const { loanId } = req.params;
-
-      const transactions = await this.loanRepository.finishLoanTransaction({
+      const { status } = req.body;
+      if (!status) {
+        return res.status(400).json({ message: "O campo status é obrigatório." });
+      }
+      const transactions = await this.loanRepository.updateLoanStatus({
         loanId,
+        status,
       });
 
       return res.status(200).json(transactions);
     } catch (error) {
       return res.status(500).json({
-        message: "Erro ao finalizar empréstimo",
+        message: "Erro ao atualizar status do empréstimo",
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }
@@ -95,6 +99,19 @@ export class LoanController {
         message: "Erro ao buscar os empréstimos deste livro",
         error: error instanceof Error ? error.message : "Unknown error",
       });
+    }
+  }
+
+  async getMetrics(req: Request, res: Response): Promise<Response> {
+    try {
+      const period = req.query.period?.toString() || "Desde sempre";
+
+      const metrics = await this.loanRepository.getLoansCountByCategory(period);
+
+      return res.status(200).json(metrics);
+    } catch (error) {
+      console.error("Erro ao buscar métricas:", error);
+      return res.status(500).json({ message: "Erro ao buscar métricas", error });
     }
   }
 }

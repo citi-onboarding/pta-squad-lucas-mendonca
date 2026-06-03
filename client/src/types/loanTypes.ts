@@ -24,8 +24,9 @@ export interface CreateLoan {
     dueDate : Date,
 }
 
-export interface FinishLoan {
-    loanId : string
+export interface UpdateLoanStatus {
+    loanId : string;
+    status: 'DEVOLVIDO' | 'ATRASADO'
 }
 
 export interface BookLoanModalProps {
@@ -36,4 +37,4 @@ export interface BookLoanModalProps {
   onRefreshCatalog: () => void; // Para atualizar o estoque na tela de fundo após o sucesso
 }
 
-export interface FindLoan extends Partial<FinishLoan>{}
+export interface FindLoan extends Partial<UpdateLoanStatus>{}

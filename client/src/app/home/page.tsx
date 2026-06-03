@@ -42,7 +42,7 @@ export default function DashboardPage() {
 );
 
   const totalBooks = data.books.reduce((acc, book) => acc + book.totalQuantity, 0);
-  const totalLoans = data.loans.length;
+  const totalLoans = data.loans.filter(loan => loan.status !== "DEVOLVIDO").length;
   const lateLoans  = data.loans.filter(loan => {
       const isPastDue = new Date() > new Date(loan.dueDate);
       return loan.status !== "DEVOLVIDO" && isPastDue;
@@ -69,14 +69,14 @@ export default function DashboardPage() {
             title="Empréstimos Ativos"
             data={totalLoans}
             icon={<Clock size={22}/>}
-            variant="default"
+            variant="active"
           />
             
           <LibraryDataCard
             title="Livros Atrasados"
             data={lateLoans}
             icon={<AlertCircle size={22}/>}
-            variant={lateLoans > 0 ? "alert" : "default"}          
+            variant="alert"          
           />
 
         </div>

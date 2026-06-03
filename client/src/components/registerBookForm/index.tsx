@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { bookSchema, BookFormData } from "@/types/book";
 import Image from "next/image";
 import { useState } from "react";
-import { createBook } from "@/services/bookService";
+import { createBook } from "@/services/books";
 
 
   const categories = [
@@ -89,28 +89,28 @@ const onSubmit = (data: BookFormData) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Título</label>
-            <input {...register("title")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("title")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.title && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Autor</label>
-            <input {...register("author")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("author")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.author && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">ISBN</label>
-            <input {...register("isbn")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("isbn")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.isbn && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Editora</label>
-            <input {...register("publisher")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition" />
+            <input {...register("publisher")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition" />
             {errors.publisher && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
 
@@ -120,14 +120,14 @@ const onSubmit = (data: BookFormData) => {
             <input
                 type="number"
                 {...register("year")}
-                className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
+                className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
                 {errors.year && (<p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>)}
           </div>
 
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Quantidade</label>
-            <input type="number" {...register("quantity")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-emerald-500 transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+            <input type="number" {...register("quantity")} className="border p-2.5 bg-gray-50 rounded-lg outline-none focus:border-primary-blue transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             {errors.quantity && <p className="text-red-500 text-sm mt-1">*Este é um campo obrigatório.</p>}
           </div>
         </div>
@@ -145,7 +145,7 @@ const onSubmit = (data: BookFormData) => {
                   onClick={() => setValue("category", cat.name, { shouldValidate: true })}
                   className={`border rounded-xl p-0 overflow-hidden flex items-center justify-center transition aspect-square ${
                     isSelected
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 font-semibold shadow-sm"
+                      ? "border-primary-blue bg-secondary-blue text-white font-semibold shadow-sm"
                       : errors.category
                         ? "border-red-500 bg-white text-gray-600"
                         : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
@@ -169,14 +169,14 @@ const onSubmit = (data: BookFormData) => {
           <button
             type="button"
             onClick={() => router.push("/books")}
-            className="border border-emerald-500 text-emerald-500 px-5 py-2.5 rounded-lg bg-white hover:bg-emerald-50 font-medium transition text-sm"
+            className="border border-primary-blue text-primary-blue px-5 py-2.5 rounded-lg bg-white hover:bg-secondary-blue hover:text-white font-medium transition text-sm"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-tertiary-blue hover:bg-primary-blue text-white px-5 py-2.5 rounded-lg font-medium transition text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Salvando..." : "Salvar Livro"}
           </button>

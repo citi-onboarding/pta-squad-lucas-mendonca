@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { BookRepository } from '../repositories/bookRepository';
+import {LoanRepository} from "../repositories/loanRepository"
 import { CreateBookDTO, UpdateBookDTO } from '../DTOs/bookDTO';
 import { Category } from '@prisma/client';
 
 const bookRepository = new BookRepository();
+const loanRepository = new LoanRepository();
 
 export class BookController {
   
@@ -86,15 +88,29 @@ export class BookController {
   remove = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;
+      const book = await bookRepository.findBookById(id); 
+      const loans = await loanRepository.findLoansByBookId(id);
+
+      if (!book) {
+        return res.status(404).json({ error: "Livro não encontrado." });
+      }
+
+      const hasPendingLoans = loans?.some(
+        (loan: any) => loan.status === 'EM_ANDAMENTO' || loan.status === 'ATRASADO'
+      );
+      if (hasPendingLoans) {
+        return res.status(400).json({ 
+          error: "Não é possível deletar o livro pois há empréstimos em andamento ou atrasados." 
+        });
+      }
+
       await bookRepository.deleteBook(id);
       
       return res.status(200).json({ message: "Livro removido com sucesso." });
       
     } catch (error: any) {
-      if (error.code === 'P2003') {
-        return res.status(400).json({ error: "Livro possui histórico e não pode ser apagado." });
-      }
+      console.error(error);
       return res.status(500).json({ error: "Erro interno ao apagar o livro." });
     }
-  };
+};
 }
