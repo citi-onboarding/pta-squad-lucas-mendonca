@@ -1,4 +1,5 @@
 import { createLoan } from "@/services/loans";
+import { sendLoanConfirmation } from "@/services/mails";
 import { LoanFormData, loanSchema } from "@/types/loan";
 import { BookLoanModalProps } from "@/types/loanTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +37,14 @@ export function BookLoanModal({
         customerName: data.customerName,
         customerEmail: data.customerEmail,
         dueDate,
+      });
+
+      await sendLoanConfirmation({
+        userEmail: data.customerEmail,
+        userName: data.customerName,
+        bookTitle: bookTitle,
+        loanDate: new Date().toISOString(),
+        dueDate: new Date(data.dueDate).toISOString(),
       });
 
       alert("Empréstimo realizado com sucesso!");
