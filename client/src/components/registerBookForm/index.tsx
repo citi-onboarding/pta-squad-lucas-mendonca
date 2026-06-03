@@ -144,7 +144,7 @@ const onSubmit = (data: BookFormData) => {
                   key={cat.name}
                   type="button"
                   onClick={() => setValue("category", cat.name, { shouldValidate: true })}
-                  className={`border rounded-xl p-0 overflow-hidden flex items-center justify-center transition aspect-square ${
+                  className={`border rounded-xl p-0 overflow-hidden flex items-center justify-center transition aspect-square transition-transform delay-50 duration-300 ease-in-out transform-gpu hover:-translate-y-1 hover:scale-105 ${
                     isSelected
                       ? "border-primary-blue bg-secondary-blue text-white font-semibold shadow-sm"
                       : errors.category
@@ -152,11 +152,11 @@ const onSubmit = (data: BookFormData) => {
                         : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                    <div className="w-full h-full relative flex items-center justify-center">
+                    <div className="w-full h-full relative flex items-center justify-center ">
                         <Image
                             src={cat.image.default || cat.image}
                             alt={cat.name}
-                            className="w-full h-full object-cover"/>
+                            className="w-full h-full object-cover "/>
                     </div>
 
                 </button>
