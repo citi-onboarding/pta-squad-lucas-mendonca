@@ -29,7 +29,7 @@ export default function BookCard({
     const { label, color} = categoryMeta[category];
 
     return(
-        <Card className="flex flex-col overflow-hidden p-0">
+        <Card className="flex flex-col overflow-hidden p-0 group transition-transform duration-300 ease-in-out transform-gpu hover:scale-105">
             
             <div className="h-44 w-full bg-gray-100"> 
                 <img

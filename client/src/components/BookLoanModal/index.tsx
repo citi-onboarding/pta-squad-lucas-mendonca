@@ -48,8 +48,8 @@ export function BookLoanModal({
       });
 
       alert("Empréstimo realizado com sucesso!");
-      onRefreshCatalog(); // Atualiza a lista de livros atrás do modal
-      onClose(); // Fecha o modal
+      onRefreshCatalog(); 
+      onClose(); 
     } catch (error) {
       console.error(error);
       alert("Erro ao realizar empréstimo.");
@@ -118,7 +118,7 @@ export function BookLoanModal({
             <button
               type="button"
               onClick={onClose}
-              className="h-12 flex-1 rounded-md border border-[#2C4A73] text-[#2C4A73]" //change to enum for colors
+              className="h-12 flex-1 rounded-md border border-[#2C4A73] text-[#2C4A73]  hover:bg-tertiary-blue hover:text-white" 
             >
               Cancelar
             </button>
@@ -126,9 +126,20 @@ export function BookLoanModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`h-12 flex-[2] rounded-md text-white ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#2C4A73]"}`}
+            
+              className={`h-12 flex-[2] rounded-md text-white flex items-center justify-center gap-2 ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#2C4A73]"}  hover:bg-tertiary-blue`}
             >
-              {isSubmitting ? "Enviando..." : "Confirmar Empréstimo"}
+              {isSubmitting ? (
+                <>
+                  <svg className="size-5 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.2" />
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  Enviando...
+                </>
+              ) : (
+                "Confirmar Empréstimo"
+              )}
             </button>
           </div>
         </form>
