@@ -39,7 +39,7 @@ export function BookLoanModal({
         dueDate,
       });
 
-      await sendLoanConfirmation({
+      sendLoanConfirmation({
         userEmail: data.customerEmail,
         userName: data.customerName,
         bookTitle: bookTitle,
