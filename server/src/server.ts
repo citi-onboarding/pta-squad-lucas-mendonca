@@ -1,12 +1,15 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import dns from "dns";
 import "@database";
 import loanRoutes from "./routes/loanRoutes";
 import bookRoutes from "./routes/bookRoutes";
 import mailRoutes from "./routes/mailRoutes";
 
 dotenv.config();
+
+dns.setDefaultResultOrder('ipv4first');
 
 const app = express();
 app.use(cors({
